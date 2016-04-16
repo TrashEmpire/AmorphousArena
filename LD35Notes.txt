@@ -11,6 +11,14 @@ Timeline:
 	Hour 2:
 		-Idea Chosen. (Amorphous Arena)
 		-Basic SDL Tester Code. I have stuff being drawn to screen at my will. 
+	Hour 3 - 14: 
+		-First Code on Github.
+		-Now I rest.
+	Hour 15:
+		-I slept too much.
+		-Game Loop up and running.
+	Hour 16:
+		-Getting graphics system working.
 		
 Completion List:
 	-Update Makefile for easy edits. CHECK

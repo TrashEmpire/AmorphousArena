@@ -5,7 +5,10 @@
 int main(int argc, char** argv)
 {
 	Game game = Game();
-	game.run();
 	
+	while(game.run() == true)
+	{
+		
+	}
 	return 0;
 }
