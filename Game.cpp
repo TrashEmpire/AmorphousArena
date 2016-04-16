@@ -173,6 +173,11 @@ void Game::initGraphics()
 	surf = SDL_LoadBMP("assets\\aboutScreen.bmp");
 	aboutText = SDL_CreateTextureFromSurface( myRenderer, surf );
 	SDL_FreeSurface( surf );
+	
+	//Game Menu Text Texture.
+	surf = SDL_LoadBMP("assets\\gameMenu.bmp");
+	gameMenuText = SDL_CreateTextureFromSurface( myRenderer, surf);
+	SDL_FreeSurface( surf );
 }
 
 void Game::render()
@@ -245,15 +250,25 @@ void Game::drawAbout()
 
 void Game::drawGameMenu()
 {
-	SDL_SetRenderDrawColor( myRenderer, 255, 0, 0, 255);
+	SDL_SetRenderDrawColor( myRenderer, 0, 0, 0, 255);
 	SDL_RenderClear( myRenderer );
+	
+	SDL_Rect rect;
+	rect.x=50;rect.y=25;rect.w=500;rect.h=400;
+	SDL_RenderCopy( myRenderer, gameMenuText, NULL, &rect );
+	
+	rect.x=195;rect.y=400;rect.w=100;rect.h=50;
+	SDL_RenderCopy( myRenderer, returnButton, NULL, &rect );
+	
+	rect.x=345;rect.y=400;rect.w=100;rect.h=50;
+	SDL_RenderCopy( myRenderer, playGame, NULL, &rect );
 	
 	SDL_RenderPresent( myRenderer );
 }
 
 void Game::drawGame()
 {
-	SDL_SetRenderDrawColor( myRenderer, 255, 255, 255, 255);
+	SDL_SetRenderDrawColor( myRenderer, 255, 0, 0, 255);
 	SDL_RenderClear( myRenderer );
 	
 	SDL_RenderPresent( myRenderer );
@@ -288,7 +303,7 @@ void Game::getInput()
 
 void Game::getKeyInput(SDL_Keycode key)
 {
-	if(key == SDLK_SPACE)
+	if(key == SDLK_ESCAPE)
 	{
 		quitGame = true;
 	}
@@ -340,6 +355,7 @@ void Game::getMouseInput(SDL_Event* event)
 		//In About Menu.
 		if(testBounds(mouseX, mouseY, 270, 400, 370, 450) == true)
 		{
+			//You Clicked Return.
 			resetState();
 			startMenuState = true;
 		}
@@ -347,6 +363,19 @@ void Game::getMouseInput(SDL_Event* event)
 	else if(gameMenuState == true)
 	{
 		//In Game Menu.
+		if(testBounds(mouseX, mouseY, 195, 400, 295, 450) == true)
+		{
+			//You Clicked Return.
+			resetState();
+			startMenuState = true;
+		}
+		
+		if(testBounds(mouseX, mouseY, 345, 400, 445, 450) == true)
+		{
+			//You Clicked Play Game.
+			resetState();
+			gameState = true;
+		}
 		
 	}
 	else if(gameState == true)
@@ -369,6 +398,7 @@ bool Game::testBounds(int testX, int testY, int x, int y, int x2, int y2)
 Game::~Game()
 {
 	//Destructor.
+	SDL_DestroyTexture( gameMenuText );
 	SDL_DestroyTexture( returnButton );
 	SDL_DestroyTexture( aboutText );
 	SDL_DestroyTexture( amorArena );

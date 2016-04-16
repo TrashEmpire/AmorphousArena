@@ -34,7 +34,7 @@ Completion List:
 	-Draw placeholder graphics to screen. CHECK
 	-Be able to get user input at will. CHECK
 	-Basic UI. In Game Class. Buttons and stuff. CHECK
-	-Code About Menu.
+	-Code About Menu. CHECK
 	-Code Game Menu.
 	-Game Code:
 		-

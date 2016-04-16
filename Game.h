@@ -41,6 +41,7 @@ class Game
 		SDL_Event myEvent;
 		
 		//Textures.
+		SDL_Texture* gameMenuText;
 		SDL_Texture* returnButton;
 		SDL_Texture* aboutText;
 		SDL_Texture* amorArena;
