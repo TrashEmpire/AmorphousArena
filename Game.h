@@ -10,11 +10,21 @@ class Game
 		~Game();//Destructor. We are dealing with dynamic memory.
 		
 	private:
+		//Graphics.
 		void render();//Graphic Stuff Here.
 		void initGraphics();//Creates Textures and Stuff.
-		void drawButton(int x, int y, int w, int h);//Draws a button w/ specs.
+		void drawMenu();//Draw the Start Menu.
+		void drawSettings();//Draw the Settings Menu.
+		void drawAbout();//Draw the about Menu.
+		void drawGameMenu();//Draw the Game Menu.
+		void drawGame();//Draw the Game.
+		
+		//Game Logic.
 		void update();//Game Logic Here.
+		
+		//Game Input.
 		void getInput();//Checks for User Input. Changes Game Values.
+		void getKeyInput(SDL_Keycode key);//Get Keyboard Input.
 		void getMouseInput(SDL_Event* event);//Mouse Input is huge so it gets its own method.
 		bool testBounds(int testX, int testY, int x, int y, int x2, int y2);//test bounds. makes buttons easier.
 		void resetState();//Sets all states to false.
@@ -30,8 +40,14 @@ class Game
 		SDL_Window* myWindow;
 		SDL_Surface* mySurface;
 		SDL_Renderer* myRenderer;
-		SDL_Texture* testTexture;
 		SDL_Event myEvent;
+		
+		//Textures.
+		SDL_Texture* amorArena;
+		SDL_Texture* playGame;
+		SDL_Texture* about;
+		SDL_Texture* settings;
+		SDL_Texture* quit;
 		
 		//Setting Variables.
 		bool quitGame;

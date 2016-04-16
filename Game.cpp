@@ -142,10 +142,33 @@ void Game::update()
 
 void Game::initGraphics()
 {
-	SDL_Surface* circle = NULL;
-	circle = SDL_LoadBMP("assets\\circle.bmp");
-	testTexture = SDL_CreateTextureFromSurface( myRenderer, circle);
-	SDL_FreeSurface(circle);
+	//Load Textures.
+	SDL_Surface* surf = NULL;
+	
+	//Title Texture.
+	surf = SDL_LoadBMP("assets\\amorArena.bmp");
+	amorArena = SDL_CreateTextureFromSurface( myRenderer, surf);
+	SDL_FreeSurface(surf);
+	
+	//Play Game Button Texture.
+	surf = SDL_LoadBMP("assets\\playGame.bmp");
+	playGame = SDL_CreateTextureFromSurface( myRenderer, surf);
+	SDL_FreeSurface( surf );
+	
+	//About Button Texture.
+	surf = SDL_LoadBMP("assets\\about.bmp");
+	about = SDL_CreateTextureFromSurface( myRenderer, surf );
+	SDL_FreeSurface( surf );
+	
+	//Settings Button Texture.
+	surf = SDL_LoadBMP("assets\\settings.bmp");
+	settings = SDL_CreateTextureFromSurface( myRenderer, surf );
+	SDL_FreeSurface( surf );
+	
+	//Quit Button Texture.
+	surf = SDL_LoadBMP("assets\\Quit.bmp");
+	quit = SDL_CreateTextureFromSurface( myRenderer, surf );
+	SDL_FreeSurface( surf );
 }
 
 void Game::render()
@@ -156,39 +179,91 @@ void Game::render()
 	if(startMenuState == true)
 	{
 		//Draw the Start Menu Here.
-		SDL_SetRenderDrawColor( myRenderer, 0, 0, 0, 255);
-		SDL_RenderClear( myRenderer );
-		//Draw stuff here.
+		drawMenu();
+	}
+	else if(settingsState == true)
+	{
+		//Draw the settings menu here.
+		drawSettings();
 		
-		drawButton(270, 300, 100, 50);
-		
-		SDL_Rect srcr;
-		srcr.x = 100;
-		srcr.y = 100;
-		srcr.w = 100;
-		srcr.h = 100;
-		SDL_RenderCopy(myRenderer, testTexture, NULL, &srcr);
-		
-		SDL_RenderPresent( myRenderer );
 	}
 	else if(aboutState == true)
 	{
-		//Draw the about menu here.
-		
+		//Draw the about menu.
+		drawAbout();
+	}
+	else if(gameMenuState == true)
+	{
+		//Draw the game menu.
+		drawGameMenu();
+	}
+	else if(gameState == true)
+	{
+		//Draw the game.
+		drawGame();
 	}
 }
 
-void Game::drawButton(int x, int y, int w, int h)
+void Game::drawMenu()
 {
-	//Draws a button.
-	SDL_Rect rect;
-	rect.x = x;
-	rect.y = y;
-	rect.w = w;
-	rect.h = h;
+	SDL_SetRenderDrawColor( myRenderer, 0, 0, 0, 255);
+	SDL_RenderClear( myRenderer );
 	
+	SDL_Rect rect;
+	
+	//Amorphous Arena Title.
+	rect.x=120;rect.y=50;rect.w=400;rect.h=100;
+	SDL_RenderCopy( myRenderer, amorArena, NULL, &rect );
+	
+	//Play Game Button.
+	rect.x=270;rect.y=150;rect.w=100;rect.h=50;
+	SDL_RenderCopy( myRenderer, playGame, NULL, &rect );
+	
+	//Settings Button.
+	rect.x=270;rect.y=225;rect.w=100;rect.h=50;
+	SDL_RenderCopy( myRenderer, settings, NULL, &rect );
+	
+	//About Button.
+	rect.x=270;rect.y=300;rect.w=100;rect.h=50;
+	SDL_RenderCopy( myRenderer, about, NULL, &rect);
+	
+	//Quit Button.
+	rect.x=270;rect.y=375;rect.w=100;rect.h=50;
+	SDL_RenderCopy( myRenderer, quit, NULL, &rect );
+	
+	SDL_RenderPresent( myRenderer );
+}
+
+void Game::drawSettings()
+{
+	SDL_SetRenderDrawColor( myRenderer, 0, 255, 0, 255);
+	SDL_RenderClear( myRenderer );
+	
+	SDL_RenderPresent( myRenderer );
+}
+
+void Game::drawAbout()
+{
+	SDL_SetRenderDrawColor( myRenderer, 0, 0, 255, 255);
+	SDL_RenderClear( myRenderer );
+	
+	SDL_RenderPresent( myRenderer );
+}
+
+void Game::drawGameMenu()
+{
 	SDL_SetRenderDrawColor( myRenderer, 255, 0, 0, 255);
-	SDL_RenderFillRect(myRenderer, &rect);
+	SDL_RenderClear( myRenderer );
+	
+	SDL_RenderPresent( myRenderer );
+}
+
+void Game::drawGame()
+{
+	SDL_SetRenderDrawColor( myRenderer, 255, 255, 255, 255);
+	SDL_RenderClear( myRenderer );
+	
+	SDL_RenderPresent( myRenderer );
 }
 
 void Game::getInput()
@@ -205,14 +280,35 @@ void Game::getInput()
 		//If you click the mouse.
 		if(myEvent.type == SDL_MOUSEBUTTONDOWN)
 		{
+			//Did you click the mouse?
 			getMouseInput(&myEvent);
-			/*Example Code here.
-			if(myEvent.button.x > 400)
-			{
-				quitGame = true;
-			}*/
+		}
+		
+		//If you hit a key.
+		if(myEvent.type == SDL_KEYDOWN)
+		{
+			//Did you press a key?
+			getKeyInput(myEvent.key.keysym.sym);
 		}
 	}
+}
+
+void Game::getKeyInput(SDL_Keycode key)
+{
+	if(key == SDLK_SPACE)
+	{
+		quitGame = true;
+	}
+	
+	if(key == SDLK_BACKSPACE)
+	{
+		if(gameState != true)
+		{
+			resetState();
+			startMenuState = true;
+		}
+	}
+	
 }
 
 void Game::getMouseInput(SDL_Event* event)
@@ -225,11 +321,52 @@ void Game::getMouseInput(SDL_Event* event)
 	if(startMenuState == true)
 	{
 		//We are in the start menu.
+		//Button Code Here.
+		if(testBounds(mouseX, mouseY, 270, 150, 370, 200) == true)
+		{
+			//You Pressed Play Game.
+			resetState();
+			gameMenuState = true;
+		}
 		
+		if(testBounds(mouseX, mouseY, 270, 225, 370, 275) == true)
+		{
+			//You Pressed the Settings Button.
+			resetState();
+			settingsState = true;
+		}
+		
+		if(testBounds(mouseX, mouseY, 270, 300, 370, 350) == true)
+		{
+			//You Pressed the about button.
+			resetState();
+			aboutState = true;
+		}
+		
+		if(testBounds(mouseX, mouseY, 270, 375, 370, 425) == true)
+		{
+			//You Pressed the Quit Button.
+			quitGame = true;
+		}
 	}
 	else if(aboutState == true)
 	{
+		//In About Menu.
 		
+	}
+	else if(settingsState == true)
+	{
+		//In Settings Menu.
+		
+	}
+	else if(gameMenuState == true)
+	{
+		//In Game Menu.
+		
+	}
+	else if(gameState == true)
+	{
+		//In Game.
 	}
 }
 
@@ -247,7 +384,11 @@ bool Game::testBounds(int testX, int testY, int x, int y, int x2, int y2)
 Game::~Game()
 {
 	//Destructor.
-	SDL_DestroyTexture( testTexture );
+	SDL_DestroyTexture( amorArena );
+	SDL_DestroyTexture( playGame );
+	SDL_DestroyTexture( about );
+	SDL_DestroyTexture( settings );
+	SDL_DestroyTexture( quit );
 	SDL_DestroyRenderer( myRenderer );
 	SDL_DestroyWindow( myWindow );
 	SDL_Quit();

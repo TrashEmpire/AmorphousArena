@@ -2,7 +2,8 @@ Ludum Dare 35 Notes:
 	-The Theme is SHAPESHIFT.
 	
 Music Listened To:
-	-Suspicious Minds - Elvis Presley.
+	-Elvis Presley - Suspicious Minds.
+	-Pink Floyd - Dark Side of the Moon (Album)
 	-
 
 Timeline:
@@ -19,6 +20,9 @@ Timeline:
 		-Game Loop up and running.
 	Hour 16:
 		-Getting graphics system working.
+	Hour 17 - 18: (1PM - 2PM)
+		-Coded Main Menu Screen.
+		-Coded Main Menu Screen Behavior.
 		
 Completion List:
 	-Update Makefile for easy edits. CHECK
