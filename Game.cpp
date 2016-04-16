@@ -96,7 +96,6 @@ void Game::resetState()
 	gameMenuState = false;
 	gameState = false;
 	aboutState = false;
-	settingsState = false;
 }
 
 bool Game::run()
@@ -160,14 +159,19 @@ void Game::initGraphics()
 	about = SDL_CreateTextureFromSurface( myRenderer, surf );
 	SDL_FreeSurface( surf );
 	
-	//Settings Button Texture.
-	surf = SDL_LoadBMP("assets\\settings.bmp");
-	settings = SDL_CreateTextureFromSurface( myRenderer, surf );
-	SDL_FreeSurface( surf );
-	
 	//Quit Button Texture.
 	surf = SDL_LoadBMP("assets\\Quit.bmp");
 	quit = SDL_CreateTextureFromSurface( myRenderer, surf );
+	SDL_FreeSurface( surf );
+	
+	//Return Button Texture.
+	surf = SDL_LoadBMP("assets\\return.bmp");
+	returnButton = SDL_CreateTextureFromSurface( myRenderer, surf );
+	SDL_FreeSurface( surf );
+	
+	//About Screen Texture.
+	surf = SDL_LoadBMP("assets\\aboutScreen.bmp");
+	aboutText = SDL_CreateTextureFromSurface( myRenderer, surf );
 	SDL_FreeSurface( surf );
 }
 
@@ -180,12 +184,6 @@ void Game::render()
 	{
 		//Draw the Start Menu Here.
 		drawMenu();
-	}
-	else if(settingsState == true)
-	{
-		//Draw the settings menu here.
-		drawSettings();
-		
 	}
 	else if(aboutState == true)
 	{
@@ -216,36 +214,31 @@ void Game::drawMenu()
 	SDL_RenderCopy( myRenderer, amorArena, NULL, &rect );
 	
 	//Play Game Button.
-	rect.x=270;rect.y=150;rect.w=100;rect.h=50;
+	rect.x=270;rect.y=200;rect.w=100;rect.h=50;
 	SDL_RenderCopy( myRenderer, playGame, NULL, &rect );
 	
-	//Settings Button.
-	rect.x=270;rect.y=225;rect.w=100;rect.h=50;
-	SDL_RenderCopy( myRenderer, settings, NULL, &rect );
-	
 	//About Button.
-	rect.x=270;rect.y=300;rect.w=100;rect.h=50;
+	rect.x=270;rect.y=275;rect.w=100;rect.h=50;
 	SDL_RenderCopy( myRenderer, about, NULL, &rect);
 	
 	//Quit Button.
-	rect.x=270;rect.y=375;rect.w=100;rect.h=50;
+	rect.x=270;rect.y=350;rect.w=100;rect.h=50;
 	SDL_RenderCopy( myRenderer, quit, NULL, &rect );
-	
-	SDL_RenderPresent( myRenderer );
-}
-
-void Game::drawSettings()
-{
-	SDL_SetRenderDrawColor( myRenderer, 0, 255, 0, 255);
-	SDL_RenderClear( myRenderer );
 	
 	SDL_RenderPresent( myRenderer );
 }
 
 void Game::drawAbout()
 {
-	SDL_SetRenderDrawColor( myRenderer, 0, 0, 255, 255);
+	SDL_SetRenderDrawColor( myRenderer, 0, 0, 0, 255);
 	SDL_RenderClear( myRenderer );
+	
+	SDL_Rect rect;
+	rect.x=50;rect.y=25;rect.w=500;rect.h=400;
+	SDL_RenderCopy( myRenderer, aboutText, NULL, &rect );
+	
+	rect.x=270;rect.y=400;rect.w=100;rect.h=50;
+	SDL_RenderCopy( myRenderer, returnButton, NULL, &rect);
 	
 	SDL_RenderPresent( myRenderer );
 }
@@ -322,28 +315,21 @@ void Game::getMouseInput(SDL_Event* event)
 	{
 		//We are in the start menu.
 		//Button Code Here.
-		if(testBounds(mouseX, mouseY, 270, 150, 370, 200) == true)
+		if(testBounds(mouseX, mouseY, 270, 200, 370, 250) == true)
 		{
 			//You Pressed Play Game.
 			resetState();
 			gameMenuState = true;
 		}
 		
-		if(testBounds(mouseX, mouseY, 270, 225, 370, 275) == true)
-		{
-			//You Pressed the Settings Button.
-			resetState();
-			settingsState = true;
-		}
-		
-		if(testBounds(mouseX, mouseY, 270, 300, 370, 350) == true)
+		if(testBounds(mouseX, mouseY, 270, 275, 370, 325) == true)
 		{
 			//You Pressed the about button.
 			resetState();
 			aboutState = true;
 		}
 		
-		if(testBounds(mouseX, mouseY, 270, 375, 370, 425) == true)
+		if(testBounds(mouseX, mouseY, 270, 350, 370, 400) == true)
 		{
 			//You Pressed the Quit Button.
 			quitGame = true;
@@ -352,12 +338,11 @@ void Game::getMouseInput(SDL_Event* event)
 	else if(aboutState == true)
 	{
 		//In About Menu.
-		
-	}
-	else if(settingsState == true)
-	{
-		//In Settings Menu.
-		
+		if(testBounds(mouseX, mouseY, 270, 400, 370, 450) == true)
+		{
+			resetState();
+			startMenuState = true;
+		}
 	}
 	else if(gameMenuState == true)
 	{
@@ -384,10 +369,11 @@ bool Game::testBounds(int testX, int testY, int x, int y, int x2, int y2)
 Game::~Game()
 {
 	//Destructor.
+	SDL_DestroyTexture( returnButton );
+	SDL_DestroyTexture( aboutText );
 	SDL_DestroyTexture( amorArena );
 	SDL_DestroyTexture( playGame );
 	SDL_DestroyTexture( about );
-	SDL_DestroyTexture( settings );
 	SDL_DestroyTexture( quit );
 	SDL_DestroyRenderer( myRenderer );
 	SDL_DestroyWindow( myWindow );

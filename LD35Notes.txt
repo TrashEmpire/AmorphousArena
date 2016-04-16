@@ -7,28 +7,37 @@ Music Listened To:
 	-
 
 Timeline:
-	Hour 1:
+	Hour 1:(9 PM)
 		-Brainstormed.
-	Hour 2:
+	Hour 2:(10 PM)
 		-Idea Chosen. (Amorphous Arena)
 		-Basic SDL Tester Code. I have stuff being drawn to screen at my will. 
-	Hour 3 - 14: 
+	Hour 3 - 14:(11 PM - 10 AM)
 		-First Code on Github.
 		-Now I rest.
-	Hour 15:
+	Hour 15:(11 PM)
 		-I slept too much.
 		-Game Loop up and running.
-	Hour 16:
+	Hour 16:(12 PM)
 		-Getting graphics system working.
-	Hour 17 - 18: (1PM - 2PM)
+	Hour 17 - 18: (1PM - 2PM, 2PM - 3PM)
 		-Coded Main Menu Screen.
 		-Coded Main Menu Screen Behavior.
+	Hour 19: (3PM - 4PM)
+		-Took a break.
+		-Coded about screen.
+		-About to start Game Menu Screen. 
+		-Then I have to start doing some scary game code. Yikes.
 		
 Completion List:
 	-Update Makefile for easy edits. CHECK
 	-Draw placeholder graphics to screen. CHECK
-	-Be able to get user input at will.
-	-Basic UI. In Game Class. Buttons and stuff.
+	-Be able to get user input at will. CHECK
+	-Basic UI. In Game Class. Buttons and stuff. CHECK
+	-Code About Menu.
+	-Code Game Menu.
+	-Game Code:
+		-
 
 Brainstorm:
 	-You are a space traveler who likes to turn planets into wierd amorphous blobs with a large ray beam. It is your art. ???

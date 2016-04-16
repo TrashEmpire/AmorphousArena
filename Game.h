@@ -14,7 +14,6 @@ class Game
 		void render();//Graphic Stuff Here.
 		void initGraphics();//Creates Textures and Stuff.
 		void drawMenu();//Draw the Start Menu.
-		void drawSettings();//Draw the Settings Menu.
 		void drawAbout();//Draw the about Menu.
 		void drawGameMenu();//Draw the Game Menu.
 		void drawGame();//Draw the Game.
@@ -34,7 +33,6 @@ class Game
 		bool gameMenuState;
 		bool gameState;
 		bool aboutState;
-		bool settingsState;
 		
 		//SDL Variables.
 		SDL_Window* myWindow;
@@ -43,10 +41,11 @@ class Game
 		SDL_Event myEvent;
 		
 		//Textures.
+		SDL_Texture* returnButton;
+		SDL_Texture* aboutText;
 		SDL_Texture* amorArena;
 		SDL_Texture* playGame;
 		SDL_Texture* about;
-		SDL_Texture* settings;
 		SDL_Texture* quit;
 		
 		//Setting Variables.
