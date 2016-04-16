@@ -1,4 +1,4 @@
-# AmorphousArena
+# Amorphous Arena!
 Game made for Ludum Dare 35. The theme is shapeshift. 
 This game is an RTS style game similar in theory to Starcraft.
 
