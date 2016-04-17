@@ -33,6 +33,7 @@ class Game
 		int viewPosition;
 		int selectedX;
 		int selectedY;
+		int unitSelected; //-1 if no unit. 0 if worker, 1 if basic, 2 if flying, 3 if advanced.
 		
 		//State Variables.
 		bool startMenuState;
@@ -47,6 +48,15 @@ class Game
 		SDL_Event myEvent;
 		
 		//Textures.
+		SDL_Texture* selectedWorkerUnitButton;
+		SDL_Texture* selectedBasicUnitButton;
+		SDL_Texture* selectedFlyingUnitButton;
+		SDL_Texture* selectedAdvancedUnitButton;
+		SDL_Texture* UIBuffer;
+		SDL_Texture* workerButton;
+		SDL_Texture* basicUnitButton;
+		SDL_Texture* advancedUnitButton;
+		SDL_Texture* flyingUnitButton;
 		SDL_Texture* enemyTowerTexture;
 		SDL_Texture* towerTexture;
 		SDL_Texture* floorTileSelect;

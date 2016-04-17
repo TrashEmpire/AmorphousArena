@@ -50,6 +50,9 @@ Timeline:
 		-I may actually be able to finish. : )
 		-Just Finished Drawing All textures needed for basic game to finish. :D
 		-Serious Code Time... After Breakfast.
+	Hour 38:(10AM)
+		-Coded the UI Menu. except for Blob generation.
+		-Starting Unit Stats.
 	
 Completion List:
 	-Update Makefile for easy edits. CHECK
@@ -64,7 +67,7 @@ Completion List:
 		-Render Map. CHECK
 		-Draw and add Textures for Down and Up map buttons. CHECK
 		-Create and Add Tower Texture. CHECK
-		-Create and Add Textures for Unit Drops.
+		-Create and Add Textures for Unit Drops. CHECK
 		-Create Unit Structure.
 		-Create Unit Array.
 		-Allow unit drops in certain area.

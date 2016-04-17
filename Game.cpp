@@ -44,6 +44,7 @@ Game::Game()
 	quitGame = false;
 	selectedX = -1;
 	selectedY = -1;
+	unitSelected = -1;
 	initGraphics();
 	//End of Constructor Here.
 }
@@ -86,7 +87,9 @@ Game::Game(int width, int height)
 	resetState();
 	startMenuState = true;
 	quitGame = false;
-	
+	selectedX = -1;
+	selectedY = -1;
+	unitSelected = -1;
 	initGraphics();
 	//End of Constructor Here.
 }
@@ -221,6 +224,50 @@ void Game::initGraphics()
 	enemyTowerTexture = SDL_CreateTextureFromSurface( myRenderer, surf );
 	SDL_FreeSurface( surf );
 	
+	//Worker Button Texture.
+	surf = SDL_LoadBMP("assets\\workerButton.bmp");
+	workerButton = SDL_CreateTextureFromSurface( myRenderer, surf );
+	SDL_FreeSurface( surf );
+	
+	//Basic Unit Button Texture.
+	surf = SDL_LoadBMP("assets\\basicUnit.bmp");
+	basicUnitButton = SDL_CreateTextureFromSurface( myRenderer, surf );
+	SDL_FreeSurface( surf );
+	
+	//Flying Unit Button Texture.
+	surf = SDL_LoadBMP("assets\\flyingUnit.bmp");
+	flyingUnitButton = SDL_CreateTextureFromSurface( myRenderer, surf );
+	SDL_FreeSurface( surf );
+	
+	//Advanced Unit Button Texture.
+	surf = SDL_LoadBMP("assets\\advancedUnit.bmp");
+	advancedUnitButton = SDL_CreateTextureFromSurface( myRenderer, surf );
+	SDL_FreeSurface( surf );
+	
+	//UIBuffer texture.
+	surf = SDL_LoadBMP("assets\\uiBuffer.bmp");
+	UIBuffer = SDL_CreateTextureFromSurface( myRenderer, surf );
+	SDL_FreeSurface( surf );
+	
+	//Selected Worker Unit Button Texture.
+	surf = SDL_LoadBMP("assets\\selectedWorkerUnitButton.bmp");
+	selectedWorkerUnitButton = SDL_CreateTextureFromSurface( myRenderer, surf );
+	SDL_FreeSurface( surf );
+	
+	//Selected Basic Unit Button Texture.
+	surf = SDL_LoadBMP("assets\\selectedBasicUnitButton.bmp");
+	selectedBasicUnitButton = SDL_CreateTextureFromSurface( myRenderer, surf );
+	SDL_FreeSurface( surf );
+	
+	//Selected Flying Unit Button Texture.
+	surf = SDL_LoadBMP("assets\\selectedFlyingUnitButton.bmp");
+	selectedFlyingUnitButton = SDL_CreateTextureFromSurface( myRenderer, surf );
+	SDL_FreeSurface( surf );
+	
+	//Selected Advanced Unit Button Texture.
+	surf = SDL_LoadBMP("assets\\selectedAdvancedUnitButton.bmp");
+	selectedAdvancedUnitButton = SDL_CreateTextureFromSurface( myRenderer, surf );
+	SDL_FreeSurface( surf );
 	
 }
 
@@ -320,6 +367,60 @@ void Game::drawGame()
 	
 	//Draw the Blob Transformation UI Bar, and the Blob Counter.
 	//4 Units. Worker, Basic Attacker, Advanced Attacker, Flyer.
+	//Draw the UI Buffer.
+	rect.x=0;rect.y=374;rect.w=53;rect.h=53;
+	SDL_RenderCopy( myRenderer, UIBuffer, NULL, &rect);
+	rect.x=265;
+	SDL_RenderCopy( myRenderer, UIBuffer, NULL, &rect);
+	rect.x=318;
+	SDL_RenderCopy( myRenderer, UIBuffer, NULL, &rect);
+	rect.x=371;
+	SDL_RenderCopy( myRenderer, UIBuffer, NULL, &rect);
+	
+	//Is the worker Selected?
+	if(unitSelected == 0)
+	{
+		rect.x=53;
+		SDL_RenderCopy( myRenderer, selectedWorkerUnitButton, NULL, &rect );
+	}
+	else
+	{
+		rect.x=53;
+		SDL_RenderCopy( myRenderer, workerButton, NULL, &rect );
+	}
+	
+	if(unitSelected == 1)
+	{
+		rect.x=106;
+		SDL_RenderCopy( myRenderer, selectedBasicUnitButton, NULL, &rect );
+	}
+	else
+	{
+		rect.x=106;
+		SDL_RenderCopy( myRenderer, basicUnitButton, NULL, &rect );
+	}
+	
+	if(unitSelected == 2)
+	{
+		rect.x=159;
+		SDL_RenderCopy( myRenderer, selectedFlyingUnitButton, NULL, &rect );
+	}
+	else
+	{
+		rect.x=159;
+		SDL_RenderCopy( myRenderer, flyingUnitButton, NULL, &rect );
+	}
+	
+	if(unitSelected == 3)
+	{
+		rect.x=212;
+		SDL_RenderCopy( myRenderer, selectedAdvancedUnitButton, NULL, &rect );
+	}
+	else
+	{
+		rect.x=212;
+		SDL_RenderCopy( myRenderer, advancedUnitButton, NULL, &rect );
+	}
 	
 	//Draw the Arrows.
 	rect.x=0;rect.y=0;rect.w=640;rect.h=53;
@@ -561,7 +662,7 @@ void Game::getMouseInput(SDL_Event* event)
 	else if(gameState == true)
 	{
 		//In Game.
-		if(testBounds(mouseX, mouseY, 0, 0, 480, 53) == true)
+		if(testBounds(mouseX, mouseY, 0, 0, 640, 53) == true)
 		{
 			//you pressed the top 53 pixels.
 			if(viewPosition > 0)
@@ -582,15 +683,67 @@ void Game::getMouseInput(SDL_Event* event)
 		if(testBounds(mouseX, mouseY, 0, 53, 640, 374) == true)
 		{
 			//You pressed the map somewhere.
-			int x = mouseX;
-			int y = mouseY;
-			y = y - 53;//Get Rid of the boundary at the top.
-			y = y / 53;
-			x = x / 53;
-			y = y + viewPosition;//map reasons.
-			selectedX = x;
-			selectedY = y;
+			
+			if(unitSelected != -1)
+			{
+				//Drop Unit code.
+				
+				unitSelected = -1;//Redundant. Check Code Below. Doesn't matter tho. So I will keep this.
+			}
+			else
+			{					
+				int x = mouseX;
+				int y = mouseY;
+				y = y - 53;//Get Rid of the boundary at the top.
+				y = y / 53;
+				x = x / 53;
+				y = y + viewPosition;//map reasons.
+				selectedX = x;
+				selectedY = y;
+			}
 		}
+		
+		if(testBounds(mouseX, mouseY, 53, 374, 265, 427) == true)
+		{
+			//Which unit did you select?
+			if(testBounds(mouseX, mouseY, 53, 375, 105, 427) == true)
+			{
+				//You Pressed Worker Unit.
+				//std::cout << "Worker Unit is Selected." << std::endl;
+				selectedX=-1;selectedY=-1;
+				unitSelected = 0;
+			}
+			
+			if(testBounds(mouseX, mouseY, 106, 375, 158, 427) == true)
+			{
+				//You Pressed Basic unit.
+				//std::cout << "Basic Unit is Selected." << std::endl;
+				selectedX=-1;selectedY=-1;
+				unitSelected = 1;
+			}
+			
+			if(testBounds(mouseX, mouseY, 159, 375, 211, 427) == true)
+			{
+				//You Pressed Flying Unit.
+				//std::cout << "Flying Unit is Selected." << std::endl;
+				selectedX=-1;selectedY=-1;
+				unitSelected = 2;
+			}
+			
+			if(testBounds(mouseX, mouseY, 212, 375, 265, 427) == true)
+			{
+				//You Pressed Advanced Unit.
+				//std::cout << "Advanced Unit is Selected." << std::endl;
+				selectedX=-1;selectedY=-1;
+				unitSelected = 3;
+			}
+		}
+		else
+		{
+			//You 
+			unitSelected = -1;
+		}
+		
 		//End of Game State.
 	}
 	
@@ -611,6 +764,15 @@ bool Game::testBounds(int testX, int testY, int x, int y, int x2, int y2)
 Game::~Game()
 {
 	//Destructor.
+	SDL_DestroyTexture( selectedWorkerUnitButton );
+	SDL_DestroyTexture( selectedBasicUnitButton );
+	SDL_DestroyTexture( selectedFlyingUnitButton );
+	SDL_DestroyTexture( selectedAdvancedUnitButton );
+	SDL_DestroyTexture( UIBuffer );
+	SDL_DestroyTexture( workerButton );
+	SDL_DestroyTexture( basicUnitButton );
+	SDL_DestroyTexture( advancedUnitButton );
+	SDL_DestroyTexture( flyingUnitButton );
 	SDL_DestroyTexture( enemyTowerTexture );
 	SDL_DestroyTexture( towerTexture );
 	SDL_DestroyTexture( floorTileSelect );
