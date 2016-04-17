@@ -1,4 +1,5 @@
 #include"Game.h"
+#include"Map.h"
 #include<iostream>
 #include<SDL.h>
 
@@ -178,6 +179,21 @@ void Game::initGraphics()
 	surf = SDL_LoadBMP("assets\\gameMenu.bmp");
 	gameMenuText = SDL_CreateTextureFromSurface( myRenderer, surf);
 	SDL_FreeSurface( surf );
+	
+	//Wall Tile Texture.
+	surf = SDL_LoadBMP("assets\\wallTile.bmp");
+	wallTile = SDL_CreateTextureFromSurface( myRenderer, surf );
+	SDL_FreeSurface( surf );
+	
+	//Floor Tile Texture.
+	surf = SDL_LoadBMP("assets\\floorTile.bmp");
+	floorTile = SDL_CreateTextureFromSurface( myRenderer, surf );
+	SDL_FreeSurface( surf );
+	
+	//Red Tile Texture.
+	surf = SDL_LoadBMP("assets\\redTile.bmp");
+	redTile = SDL_CreateTextureFromSurface( myRenderer, surf );
+	SDL_FreeSurface( surf );
 }
 
 void Game::render()
@@ -268,10 +284,52 @@ void Game::drawGameMenu()
 
 void Game::drawGame()
 {
-	SDL_SetRenderDrawColor( myRenderer, 255, 0, 0, 255);
+	SDL_SetRenderDrawColor( myRenderer, 0, 0, 0, 255);
 	SDL_RenderClear( myRenderer );
 	
+	drawMap();
+	
 	SDL_RenderPresent( myRenderer );
+}
+
+void Game::drawMap()
+{
+	Map map = Map();
+	
+	int currentMapPosition = viewPosition;
+	
+	for(int a = currentMapPosition; a < currentMapPosition + 6; a++)
+	{
+		for(int b = 0; b < 12; b++)
+		{
+			int tileValue = map.getMapValue(b, a);
+			int x = b;
+			int y = a - currentMapPosition;
+			//Create Position on screen.
+			SDL_Rect rect;
+			rect.x = x * 53;
+			rect.y = (y * 53) + 53;
+			rect.w=53;rect.h=53;
+			
+			//Decide with tile to use.
+			switch(tileValue)
+			{
+				case 0:
+					SDL_RenderCopy( myRenderer, floorTile, NULL, &rect);
+					break;
+				case 1:
+					SDL_RenderCopy( myRenderer, wallTile, NULL, &rect);
+					break;
+				case 2:
+					SDL_RenderCopy( myRenderer, redTile, NULL, &rect);
+					break;
+				default:
+					std::cout << "Unknown Tile Value..." << std::endl;
+					break;
+			}
+			
+		}
+	}
 }
 
 void Game::getInput()
@@ -375,13 +433,33 @@ void Game::getMouseInput(SDL_Event* event)
 			//You Clicked Play Game.
 			resetState();
 			gameState = true;
+			viewPosition = 18;//max is 24
 		}
 		
 	}
 	else if(gameState == true)
 	{
 		//In Game.
+		if(testBounds(mouseX, mouseY, 0, 0, 480, 53) == true)
+		{
+			//you pressed the top 53 pixels.
+			if(viewPosition > 0)
+			{
+				viewPosition = viewPosition - 1;
+			}
+			
+		}
+		
+		if(testBounds(mouseX, mouseY, 0, 427, 640, 480) == true)
+		{
+			if(viewPosition < 18)
+			{
+				viewPosition = viewPosition + 1;
+			}
+		}
 	}
+	
+	//End of Mouse Input.
 }
 
 bool Game::testBounds(int testX, int testY, int x, int y, int x2, int y2)
@@ -398,6 +476,9 @@ bool Game::testBounds(int testX, int testY, int x, int y, int x2, int y2)
 Game::~Game()
 {
 	//Destructor.
+	SDL_DestroyTexture( redTile );
+	SDL_DestroyTexture( floorTile );
+	SDL_DestroyTexture( wallTile );
 	SDL_DestroyTexture( gameMenuText );
 	SDL_DestroyTexture( returnButton );
 	SDL_DestroyTexture( aboutText );

@@ -17,6 +17,7 @@ class Game
 		void drawAbout();//Draw the about Menu.
 		void drawGameMenu();//Draw the Game Menu.
 		void drawGame();//Draw the Game.
+		void drawMap();//Draws a map to the screen. *DOES NOT PRESENT*
 		
 		//Game Logic.
 		void update();//Game Logic Here.
@@ -27,6 +28,9 @@ class Game
 		void getMouseInput(SDL_Event* event);//Mouse Input is huge so it gets its own method.
 		bool testBounds(int testX, int testY, int x, int y, int x2, int y2);//test bounds. makes buttons easier.
 		void resetState();//Sets all states to false.
+		
+		//Logic Variables.
+		int viewPosition;
 		
 		//State Variables.
 		bool startMenuState;
@@ -41,6 +45,9 @@ class Game
 		SDL_Event myEvent;
 		
 		//Textures.
+		SDL_Texture* wallTile;
+		SDL_Texture* floorTile;
+		SDL_Texture* redTile;
 		SDL_Texture* gameMenuText;
 		SDL_Texture* returnButton;
 		SDL_Texture* aboutText;

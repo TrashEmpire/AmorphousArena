@@ -12,7 +12,7 @@ Timeline:
 	Hour 2:(10 PM)
 		-Idea Chosen. (Amorphous Arena)
 		-Basic SDL Tester Code. I have stuff being drawn to screen at my will. 
-	Hour 3 - 14:(11 PM - 10 AM)
+	Hour 3 - 14:(11 PM & 10 AM)
 		-First Code on Github.
 		-Now I rest.
 	Hour 15:(11 PM)
@@ -23,7 +23,7 @@ Timeline:
 	Hour 17 - 18: (1PM - 2PM, 2PM - 3PM)
 		-Coded Main Menu Screen.
 		-Coded Main Menu Screen Behavior.
-	Hour 19: (3PM - 4PM)
+	Hour 19: (3PM & 4PM)
 		-Took a break.
 		-Coded About Screen.
 		-Coded Game Menu Screen.
@@ -31,7 +31,12 @@ Timeline:
 	Hour 20: (4PM)
 		-Took Shower.
 		-Made the map class.
-		
+	Hour 21 - 22:(5PM & 6PM)
+		-Map Renders on Screen.
+		-You can move around the map as well.
+	Hour 23:
+		-Break for Dinner & thinking.
+		-Left Wrist is hurting from all the coding.
 Completion List:
 	-Update Makefile for easy edits. CHECK
 	-Draw placeholder graphics to screen. CHECK
@@ -41,9 +46,8 @@ Completion List:
 	-Code Game Menu. CHECK
 	-Game Code:
 		-Code Map Class CHECK
-		-Draw Map Textures.
-		-Render Map.
-			-create variable for mapPosition ( only the y value )
+		-Draw Map Textures. 40x40 CHECK
+		-Render Map. CHECK
 
 Brainstorm:
 	-You are a space traveler who likes to turn planets into wierd amorphous blobs with a large ray beam. It is your art. ???
