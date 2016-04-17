@@ -14,6 +14,7 @@ struct Unit
 	int xGoal;
 	int yGoal;
 	bool justMoved;
+	bool justAttacked;
 };
 
 class Game
@@ -37,6 +38,8 @@ class Game
 		//Game Logic.
 		void update();//Game Logic Here.
 		void move();//moves all units one block in the direction to their destination.
+		void attack();//Similar to move. attacks enemies or the tower adjacent to it.
+		void resetUnits();
 		
 		//Game Input.
 		void getInput();//Checks for User Input. Changes Game Values.
@@ -56,16 +59,22 @@ class Game
 		int moveSwitch;
 		int movementDelay;
 		int movementTimer;
+		int attackDelay;
+		int attackTimer;
 		double blobTimer;
 		int blobCounter;
 		int blobGenerationDelay;
 		int workerCount;
+		int towerHealth;
+		int enemyTowerHealth;
 		
 		//State Variables.
 		bool startMenuState;
 		bool gameMenuState;
 		bool gameState;
 		bool aboutState;
+		bool winState;
+		bool loseState;
 		
 		//SDL Variables.
 		SDL_Window* myWindow;
@@ -80,6 +89,8 @@ class Game
 		SDL_Texture* blobTimerText; //special thing as well.
 		SDL_Texture* blobCounterText;//Special thing. Don't have destroy texture.
 		
+		SDL_Texture* youWin;
+		SDL_Texture* youLose;
 		SDL_Texture* unselectButton;
 		SDL_Texture* workerSelectUp;
 		SDL_Texture* basicSelectUp;

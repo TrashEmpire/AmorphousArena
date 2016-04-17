@@ -6,7 +6,7 @@ Music Listened To:
 	-Pink Floyd - Dark Side of the Moon (Album)
 	-Pink Floyd - Animals (Album)
 	-Monstercat Podcast Ep. 101
-	-
+	-Monstercat Podcast Ep. 100
 
 Timeline:
 	Hour 1:(9 PM)
@@ -68,8 +68,9 @@ Timeline:
 		-Movement implemented.
 		-Unselect Button, or just press space.
 		-Break. Starting to get sick from all screen time.
-	Hour 45:
+	Hour 45:(5PM)
 		-only 3 more hours(inclusive)
+		-Attacking System Implemented.
 		
 Completion List:
 	-Update Makefile for easy edits. CHECK

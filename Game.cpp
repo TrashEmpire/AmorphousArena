@@ -55,16 +55,7 @@ Game::Game()
 	selectedY = -1;
 	unitSelected = -1;
 	initGraphics();
-	
-	//Declare All Units to Default Values.
-	for(int a = 0; a < 24; a++)
-	{
-		for(int b = 0; b < 12; b++)
-		{
-			myUnits[a][b].exists = false;
-			myUnits[a][b].flying = false;
-		}
-	}
+	resetUnits();
 	
 	map = Map();
 	//End of Constructor Here.
@@ -113,6 +104,11 @@ Game::Game(int width, int height)
 	unitSelected = -1;
 	initGraphics();
 	
+	//End of Constructor Here.
+}
+
+void Game::resetUnits()
+{
 	//Declare All Units to Default Values.
 	for(int a = 0; a < 24; a++)
 	{
@@ -122,7 +118,6 @@ Game::Game(int width, int height)
 			myUnits[a][b].flying = false;
 		}
 	}
-	//End of Constructor Here.
 }
 
 void Game::resetState()
@@ -174,6 +169,38 @@ void Game::update()
 	//Game Logic Here.
 	if(gameState == true)
 	{
+		
+		//Lose or Win.
+		if(towerHealth <= 0)
+		{
+			//You Lose.
+			resetState();
+			loseState = true;
+		}
+		
+		if(enemyTowerHealth <= 0)
+		{
+			//You Win.
+			resetState();
+			winState = true;
+		}
+		
+		//Attack Stuff Here.
+		if((SDL_GetTicks() - attackTimer) > attackDelay)
+		{
+			//Reset Attack.
+			for(int a = 0; a < 24; a++)
+			{
+				for(int b = 0; b < 24; b++)
+				{
+					myUnits[a][b].justAttacked = false;
+				}
+			}
+			
+			attack();
+			attackTimer = SDL_GetTicks();
+		}
+		
 		//Movement Stuff Here.
 		if((SDL_GetTicks() - movementTimer) > movementDelay)
 		{
@@ -324,6 +351,95 @@ void Game::move()
 	//End of move.
 }
 
+void Game::attack()
+{
+	//Iterate.
+	for(int a = 0; a < 24; a++)
+	{
+		for(int b = 0; b < 12; b++)
+		{
+			//Check up direction.
+			if(myUnits[a][b].exists == true)
+			{
+				if(myUnits[a][b].justAttacked == false)
+				{
+					//You can attack.
+					
+					//Tower in front.
+					if(map.getMapValue(b, a - 1) == 2)
+					{
+						//There is a tower in front of this unit.
+						//Check if it's the enemy tower.
+						
+						if(a < 10)//arbritrary value that works.
+						{
+							///it is the enemy tower.
+							//Attack it.
+							enemyTowerHealth = enemyTowerHealth - myUnits[a][b].damage;
+							myUnits[a][b].justAttacked = true;
+						}
+						
+					}
+					
+					//Enemy in front.
+					
+					//Tower to the right.
+					if(map.getMapValue(b + 1, a) == 2)
+					{
+						//There is a tower in front of this unit.
+						//Check if it's the enemy tower.
+						
+						if(a < 10)//arbritrary value that works.
+						{
+							///it is the enemy tower.
+							//Attack it.
+							enemyTowerHealth = enemyTowerHealth - myUnits[a][b].damage;
+							myUnits[a][b].justAttacked = true;
+						}
+						
+					}
+					
+					//Enemy to the right.
+					
+					//Tower Under unit.
+					if(map.getMapValue(b, a + 1) == 2)
+					{
+						//There is a tower in front of this unit.
+						//Check if it's the enemy tower.
+						
+						if(a < 10)//arbritrary value that works.
+						{
+							///it is the enemy tower.
+							//Attack it.
+							enemyTowerHealth = enemyTowerHealth - myUnits[a][b].damage;
+							myUnits[a][b].justAttacked = true;
+						}
+						
+					}
+					
+					//Enemy Under unit.
+					
+					//Tower to left of unit.
+					if(map.getMapValue(b - 1, a) == 2)
+					{
+						//There is a tower in front of this unit.
+						//Check if it's the enemy tower.
+						
+						if(a < 10)//arbritrary value that works.
+						{
+							///it is the enemy tower.
+							//Attack it.
+							enemyTowerHealth = enemyTowerHealth - myUnits[a][b].damage;
+							myUnits[a][b].justAttacked = true;
+						}
+						
+					}
+					//Enemy to left of unit.
+				}
+			}
+		}
+	}
+}
 
 void Game::initGraphics()
 {
@@ -332,6 +448,16 @@ void Game::initGraphics()
 	
 	//Load Fonts.
 	libraSans = TTF_OpenFont( "fonts\\LibraSans.ttf", 12 );
+	
+	//You Win Texture.
+	surf = SDL_LoadBMP("assets\\youWin.bmp");
+	youWin = SDL_CreateTextureFromSurface( myRenderer, surf );
+	SDL_FreeSurface( surf );
+	
+	//You Lose Texture.
+	surf = SDL_LoadBMP("assets\\youLose.bmp");
+	youLose = SDL_CreateTextureFromSurface( myRenderer, surf );
+	SDL_FreeSurface( surf );
 	
 	//Title Texture.
 	surf = SDL_LoadBMP("assets\\amorArena.bmp");
@@ -524,6 +650,20 @@ void Game::render()
 	{
 		//Draw the game.
 		drawGame();
+	}
+	else if(winState == true)
+	{
+		//draw win screen.
+		SDL_RenderClear( myRenderer);
+		SDL_RenderCopy( myRenderer, youWin, NULL, NULL);
+		SDL_RenderPresent( myRenderer );
+	}
+	else if(loseState == true)
+	{
+		//draw lose screen.
+		SDL_RenderClear( myRenderer);
+		SDL_RenderCopy( myRenderer, youLose, NULL, NULL);
+		SDL_RenderPresent( myRenderer );
 	}
 }
 
@@ -984,13 +1124,22 @@ void Game::getMouseInput(SDL_Event* event)
 		if(testBounds(mouseX, mouseY, 345, 400, 445, 450) == true)
 		{
 			//You Clicked Play Game.
+			//Search to Here.
+			resetUnits();
 			resetState();
 			gameState = true;
 			mapUnitSelected = false;
 			blobTimer = (double)SDL_GetTicks();
 			blobCounter = 0;
 			workerCount = 0;
+			
+			towerHealth = 50;
+			enemyTowerHealth = 50;
+			
 			blobGenerationDelay = 3000;
+			
+			attackDelay = 1000;
+			attackTimer = SDL_GetTicks();
 			movementDelay = 250;
 			moveSwitch = 0;
 			movementTimer = SDL_GetTicks();
@@ -1062,6 +1211,7 @@ void Game::getMouseInput(SDL_Event* event)
 							myUnits[y][x].xGoal = 0;
 							myUnits[y][x].yGoal = 0;
 							myUnits[y][x].justMoved = false;
+							myUnits[y][x].justAttacked = false;
 							blobCounter = blobCounter - 2;
 							workerCount++;
 						}
@@ -1080,6 +1230,7 @@ void Game::getMouseInput(SDL_Event* event)
 							myUnits[y][x].xGoal = 0;
 							myUnits[y][x].yGoal = 0;
 							myUnits[y][x].justMoved = false;
+							myUnits[y][x].justAttacked = false;
 							blobCounter = blobCounter - 2;
 						}
 						
@@ -1098,6 +1249,7 @@ void Game::getMouseInput(SDL_Event* event)
 							myUnits[y][x].xGoal = 0;
 							myUnits[y][x].yGoal = 0;
 							myUnits[y][x].justMoved = false;
+							myUnits[y][x].justAttacked = false;
 							blobCounter = blobCounter - 4;
 						}
 						
@@ -1116,6 +1268,7 @@ void Game::getMouseInput(SDL_Event* event)
 							myUnits[y][x].xGoal = 0;
 							myUnits[y][x].yGoal = 0;
 							myUnits[y][x].justMoved = false;
+							myUnits[y][x].justAttacked = false;
 							blobCounter = blobCounter - 5;
 						}
 						
@@ -1200,6 +1353,8 @@ Game::~Game()
 	TTF_CloseFont( libraSans );
 	libraSans = NULL;
 	
+	SDL_DestroyTexture( youWin );
+	SDL_DestroyTexture( youLose );
 	SDL_DestroyTexture( unselectButton );
 	SDL_DestroyTexture( workerSelectUp );
 	SDL_DestroyTexture( basicSelectUp );
