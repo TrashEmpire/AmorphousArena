@@ -25,9 +25,12 @@ Timeline:
 		-Coded Main Menu Screen Behavior.
 	Hour 19: (3PM - 4PM)
 		-Took a break.
-		-Coded about screen.
-		-About to start Game Menu Screen. 
-		-Then I have to start doing some scary game code. Yikes.
+		-Coded About Screen.
+		-Coded Game Menu Screen.
+		-Quick Break. Then Game Code.
+	Hour 20: (4PM)
+		-Took Shower.
+		-Made the map class.
 		
 Completion List:
 	-Update Makefile for easy edits. CHECK
@@ -35,9 +38,12 @@ Completion List:
 	-Be able to get user input at will. CHECK
 	-Basic UI. In Game Class. Buttons and stuff. CHECK
 	-Code About Menu. CHECK
-	-Code Game Menu.
+	-Code Game Menu. CHECK
 	-Game Code:
-		-
+		-Code Map Class CHECK
+		-Draw Map Textures.
+		-Render Map.
+			-create variable for mapPosition ( only the y value )
 
 Brainstorm:
 	-You are a space traveler who likes to turn planets into wierd amorphous blobs with a large ray beam. It is your art. ???
