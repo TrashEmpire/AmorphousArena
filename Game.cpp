@@ -2,6 +2,9 @@
 #include"Map.h"
 #include<iostream>
 #include<SDL.h>
+#include<SDL_ttf.h>
+#include<string>
+#include<sstream>
 
 Game::Game()
 {
@@ -10,6 +13,12 @@ Game::Game()
 	
 	myWindow = NULL;
 	mySurface = NULL;
+	
+	//Init TTF Stuff.
+	if(TTF_Init() == -1)
+	{
+		std::cout << "Something went wrong with font initialization." << std::endl;
+	}
 	
 	//Init SDL Stuff.
 	if(SDL_Init(SDL_INIT_EVERYTHING) < 0)
@@ -163,13 +172,30 @@ bool Game::run()
 void Game::update()
 {
 	//Game Logic Here.
-	
+	if(gameState == true)
+	{
+		//Timer and blob counting stuff here.
+		blobGenerationDelay = 3000 - (250 * workerCount);//Can go down to .5 seconds.
+		
+		if((SDL_GetTicks() - (int)blobTimer) > blobGenerationDelay)
+		{
+			//Iterate Blob Count.
+			if(blobCounter < 20)
+			{
+				blobCounter++;
+			}
+			blobTimer = (double)SDL_GetTicks();
+		}
+	}
 }
 
 void Game::initGraphics()
 {
 	//Load Textures.
 	SDL_Surface* surf = NULL;
+	
+	//Load Fonts.
+	libraSans = TTF_OpenFont( "fonts\\LibraSans.ttf", 12 );
 	
 	//Title Texture.
 	surf = SDL_LoadBMP("assets\\amorArena.bmp");
@@ -308,7 +334,10 @@ void Game::initGraphics()
 	//Advanced Unit Up Texture.
 	surf = SDL_LoadBMP("assets\\advancedUnitUp.bmp");
 	advancedUnitUp = SDL_CreateTextureFromSurface( myRenderer, surf );
+	blobCounterText = SDL_CreateTextureFromSurface( myRenderer, surf );//initialized to something random.
+	blobTimerText =  SDL_CreateTextureFromSurface( myRenderer, surf );//initialized to something random.
 	SDL_FreeSurface( surf );	
+	
 	
 }
 
@@ -462,6 +491,35 @@ void Game::drawGame()
 		rect.x=212;
 		SDL_RenderCopy( myRenderer, advancedUnitButton, NULL, &rect );
 	}
+	
+	//Draw the Blob Counter and Timer.
+	SDL_Color color = {255, 255, 255};//White.
+	SDL_Surface* surf = NULL;
+	SDL_DestroyTexture( blobCounterText );
+	SDL_DestroyTexture( blobTimerText );
+	blobCounterText = NULL;
+	blobTimerText = NULL;
+	std::string counter;
+	std::stringstream ss;
+	std::stringstream s2;
+	ss << blobCounter;
+	s2 << ((double)(SDL_GetTicks() - (int)blobTimer) / 1000);
+	counter = "Blobs: " + ss.str();
+	
+	surf = TTF_RenderUTF8_Solid(libraSans, counter.c_str() , color);
+	blobCounterText = SDL_CreateTextureFromSurface( myRenderer, surf );
+	SDL_FreeSurface( surf );
+	
+	rect.x = 424;rect.y = 371;rect.w=159;rect.h=26;
+	SDL_RenderCopy( myRenderer, blobCounterText, NULL, &rect );
+	
+	counter = "Timer: " + s2.str();
+	rect.x = 424;rect.y=396;rect.w=159;rect.h=26;
+	surf = NULL;
+	surf = TTF_RenderUTF8_Solid(libraSans, counter.c_str(), color );
+	blobTimerText = SDL_CreateTextureFromSurface( myRenderer, surf );
+	SDL_FreeSurface( surf );
+	SDL_RenderCopy( myRenderer, blobTimerText, NULL, &rect );
 	
 	//Draw the Arrows.
 	rect.x=0;rect.y=0;rect.w=640;rect.h=53;
@@ -727,6 +785,10 @@ void Game::getMouseInput(SDL_Event* event)
 			//You Clicked Play Game.
 			resetState();
 			gameState = true;
+			blobTimer = (double)SDL_GetTicks();
+			blobCounter = 0;
+			workerCount = 0;
+			blobGenerationDelay = 3000;
 			viewPosition = 18;//max is 24
 		}
 		
@@ -770,41 +832,61 @@ void Game::getMouseInput(SDL_Event* event)
 					if(unitSelected == 0)
 					{
 						//Drop Worker Unit.
-						myUnits[y][x].exists = true;
-						myUnits[y][x].type = 0;
-						myUnits[y][x].health = 2;
-						myUnits[y][x].damage = 0;
-						myUnits[y][x].flying = false;
+						if(blobCounter >= 2 && workerCount < 6)
+						{								
+							myUnits[y][x].exists = true;
+							myUnits[y][x].type = 0;
+							myUnits[y][x].health = 2;
+							myUnits[y][x].damage = 0;
+							myUnits[y][x].flying = false;
+							blobCounter = blobCounter - 2;
+							workerCount++;
+						}
 					}
 					
 					if(unitSelected == 1)
 					{
 						//Drop Basic Unit.
-						myUnits[y][x].exists = true;
-						myUnits[y][x].type = 1;
-						myUnits[y][x].health = 4;
-						myUnits[y][x].damage = 1;
-						myUnits[y][x].flying = false;
+						if(blobCounter >= 2)
+						{
+							myUnits[y][x].exists = true;
+							myUnits[y][x].type = 1;
+							myUnits[y][x].health = 4;
+							myUnits[y][x].damage = 1;
+							myUnits[y][x].flying = false;
+							blobCounter = blobCounter - 2;
+						}
+						
 					}
 					
 					if(unitSelected == 2)
 					{
 						//Drop Flying Unit.
-						myUnits[y][x].exists = true;
-						myUnits[y][x].type = 2;
-						myUnits[y][x].health = 4;
-						myUnits[y][x].damage = 1;
-						myUnits[y][x].flying = true;
+						if(blobCounter >= 4)
+						{
+							myUnits[y][x].exists = true;
+							myUnits[y][x].type = 2;
+							myUnits[y][x].health = 4;
+							myUnits[y][x].damage = 1;
+							myUnits[y][x].flying = true;	
+							blobCounter = blobCounter - 4;
+						}
+						
 					}
 					
 					if(unitSelected == 3)
 					{
 						//Drop Advanced Unit.
-						myUnits[y][x].exists = true;
-						myUnits[y][x].type = 3;
-						myUnits[y][x].health = 10;
-						myUnits[y][x].damage = 3;
-						myUnits[y][x].flying = false;
+						if(blobCounter >= 5)
+						{
+							myUnits[y][x].exists = true;
+							myUnits[y][x].type = 3;
+							myUnits[y][x].health = 10;
+							myUnits[y][x].damage = 3;
+							myUnits[y][x].flying = false;	
+							blobCounter = blobCounter - 5;
+						}
+						
 					}
 				}
 				unitSelected = -1;//Redundant. Check Code Below. Doesn't matter tho. So I will keep this.
@@ -877,6 +959,9 @@ bool Game::testBounds(int testX, int testY, int x, int y, int x2, int y2)
 Game::~Game()
 {
 	//Destructor.
+	TTF_CloseFont( libraSans );
+	libraSans = NULL;
+	
 	SDL_DestroyTexture( workerUnitUp );
 	SDL_DestroyTexture( basicUnitUp );
 	SDL_DestroyTexture( flyingUnitUp );
@@ -907,5 +992,6 @@ Game::~Game()
 	SDL_DestroyTexture( quit );
 	SDL_DestroyRenderer( myRenderer );
 	SDL_DestroyWindow( myWindow );
+	TTF_Quit();
 	SDL_Quit();
 }

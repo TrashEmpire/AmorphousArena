@@ -5,6 +5,7 @@ Music Listened To:
 	-Elvis Presley - Suspicious Minds.
 	-Pink Floyd - Dark Side of the Moon (Album)
 	-Pink Floyd - Animals (Album)
+	-Monstercat Podcast Ep. 101
 	-
 
 Timeline:
@@ -53,6 +54,16 @@ Timeline:
 	Hour 38:(10AM)
 		-Coded the UI Menu. except for Blob generation.
 		-Starting Unit Stats.
+	Hour 39 & 40:(11AM & 12AM)
+		-Finished Unit Stats.
+		-Created System for Drawing Units to screen.
+		-Created System for dropping specific units in spawn zones.
+	Hour 41:(1PM)
+		-8 Hours Left (Inclusive Hour Scheduling)
+		-Fonts and Text System Implemented.
+	Hour 42:(2PM)
+		-Blob Generation System Implemented.
+		-Worker system works as well.
 	
 Completion List:
 	-Update Makefile for easy edits. CHECK
@@ -73,7 +84,7 @@ Completion List:
 		-Create Unit Array. CHECK
 		-Create System to draw Units to Screen. CHECK
 		-Allow unit drops in certain area. CHECK
-		-Create Amorphous Blob limit and generation.
+		-Create Amorphous Blob limit and generation. CHECK
 		-Break.
 		-Create Unit Movement. (Pathfinding possibly. Yikes.)
 		-Create Sample Enemy and fighting. ( Both you and enemy Take damage. exceptions with flying )

@@ -1,5 +1,6 @@
 #include<iostream>
 #include<SDL.h>
+#include<SDL_ttf.h>
 #include "Map.h"
 
 //Unit Structure.
@@ -47,6 +48,10 @@ class Game
 		int unitSelected; //-1 if no unit. 0 if worker, 1 if basic, 2 if flying, 3 if advanced.
 		Unit myUnits[24][12];
 		Map map;
+		double blobTimer;
+		int blobCounter;
+		int blobGenerationDelay;
+		int workerCount;
 		
 		//State Variables.
 		bool startMenuState;
@@ -60,7 +65,12 @@ class Game
 		SDL_Renderer* myRenderer;
 		SDL_Event myEvent;
 		
+		//Fonts
+		TTF_Font* libraSans;
+		
 		//Textures.
+		SDL_Texture* blobTimerText; //special thing as well.
+		SDL_Texture* blobCounterText;//Special thing. Don't have destroy texture.
 		SDL_Texture* workerUnitUp;
 		SDL_Texture* basicUnitUp;
 		SDL_Texture* flyingUnitUp;
