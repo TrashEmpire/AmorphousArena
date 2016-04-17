@@ -177,6 +177,16 @@ void Game::update()
 		//Movement Stuff Here.
 		if((SDL_GetTicks() - movementTimer) > movementDelay)
 		{
+			//Reset Movement.
+			for(int a=0;a < 24; a++)
+			{
+				for(int b = 0; b < 12; b++)
+				{
+					myUnits[a][b].justMoved = false;
+				}
+				
+			}
+			
 			move();
 			movementTimer = SDL_GetTicks();
 		}
@@ -198,7 +208,120 @@ void Game::update()
 
 void Game::move()
 {
+	for(int a = 0; a < 24; a++)
+	{
+		for(int b = 0; b < 12; b++)
+		{
+			if(myUnits[a][b].exists == true)
+			{
+				//Your Unit is on the map.
+				if(myUnits[a][b].xGoal != 0)
+				{
+					//Your Unit wants to move.
+					
+					//Start with x movement. The current units are dumb btw.
+					//Does it want to move in the x direction?
+					int xMove = myUnits[a][b].xGoal;
+					if(xMove != 0)//redundancy lol
+					{
+						//your unit wants to move in the x direction.
+						if(xMove > 0)
+						{
+							//your unit wants to move right.
+							if(map.getMapValue(b + 1, a) == 0 && myUnits[a][b + 1].exists == false)
+							{
+								//no obstacles.
+								if(myUnits[a][b].justMoved == true)
+								{
+									
+								}
+								else
+								{									
+									myUnits[a][b].xGoal -= 1;
+									myUnits[a][b + 1] = myUnits[a][b];
+									myUnits[a][b].exists = false;	
+									myUnits[a][b + 1].justMoved = true;
+								}
+							}
+						}
+						else if( xMove < 0)
+						{
+							//your unit wants to move left.
+							
+							//check if it can.
+							if(map.getMapValue(b - 1, a) == 0 && myUnits[a][b - 1].exists == false)
+							{
+								//no obstacles.
+								if(myUnits[a][b].justMoved == true)
+								{
+									
+								}
+								else
+								{
+									myUnits[a][b].xGoal += 1;
+									myUnits[a][b - 1] = myUnits[a][b];
+									myUnits[a][b].exists = false;
+									myUnits[a][b -1].justMoved = true;
+								}
+								
+							}
+						}
+					}
+					
+				}
+				
+				if(myUnits[a][b].yGoal != 0)
+				{
+					int yMove = myUnits[a][b].yGoal;
+					
+					if(yMove > 0)
+					{
+						//your unit wants to move down.
+						
+						if(map.getMapValue(b, a + 1) == 0 && myUnits[a + 1][b].exists == false)
+						{
+							//no obstacles.
+							if(myUnits[a][b].justMoved == true)
+							{
+								
+							}
+							else
+							{
+								myUnits[a][b].yGoal -= 1;
+								myUnits[a + 1][b] = myUnits[a][b];
+								myUnits[a][b].exists = false;
+								myUnits[a + 1][b].justMoved = true;
+							}
+							
+						}
+					}
+					else if(yMove < 0)
+					{
+						//your unit wants to move up.
+						if(map.getMapValue(b, a - 1) == 0 && myUnits[a - 1][b].exists == false)
+						{
+							//no obstacles.
+							if(myUnits[a][b].justMoved == true)
+							{
+								
+							}
+							else
+							{
+								myUnits[a][b].yGoal += 1;
+								myUnits[a - 1][b] = myUnits[a][b];
+								myUnits[a][b].exists = false;
+								myUnits[a - 1][b].justMoved = true;
+							}
+							
+						}
+					}
+				}
+				
+			}
+		}
+	}
 	
+	//End of move.
 }
 
 
@@ -855,6 +978,7 @@ void Game::getMouseInput(SDL_Event* event)
 			workerCount = 0;
 			blobGenerationDelay = 3000;
 			movementDelay = 250;
+			moveSwitch = 0;
 			movementTimer = SDL_GetTicks();
 			viewPosition = 18;//max is 24
 		}
@@ -923,6 +1047,7 @@ void Game::getMouseInput(SDL_Event* event)
 							myUnits[y][x].flying = false;
 							myUnits[y][x].xGoal = 0;
 							myUnits[y][x].yGoal = 0;
+							myUnits[y][x].justMoved = false;
 							blobCounter = blobCounter - 2;
 							workerCount++;
 						}
@@ -940,6 +1065,7 @@ void Game::getMouseInput(SDL_Event* event)
 							myUnits[y][x].flying = false;
 							myUnits[y][x].xGoal = 0;
 							myUnits[y][x].yGoal = 0;
+							myUnits[y][x].justMoved = false;
 							blobCounter = blobCounter - 2;
 						}
 						
@@ -957,6 +1083,7 @@ void Game::getMouseInput(SDL_Event* event)
 							myUnits[y][x].flying = true;	
 							myUnits[y][x].xGoal = 0;
 							myUnits[y][x].yGoal = 0;
+							myUnits[y][x].justMoved = false;
 							blobCounter = blobCounter - 4;
 						}
 						
@@ -974,6 +1101,7 @@ void Game::getMouseInput(SDL_Event* event)
 							myUnits[y][x].flying = false;	
 							myUnits[y][x].xGoal = 0;
 							myUnits[y][x].yGoal = 0;
+							myUnits[y][x].justMoved = false;
 							blobCounter = blobCounter - 5;
 						}
 						

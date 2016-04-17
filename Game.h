@@ -13,6 +13,7 @@ struct Unit
 	bool flying;
 	int xGoal;
 	int yGoal;
+	bool justMoved;
 };
 
 class Game
@@ -35,7 +36,7 @@ class Game
 		
 		//Game Logic.
 		void update();//Game Logic Here.
-		void move();//moves all units one block in their destination.
+		void move();//moves all units one block in the direction to their destination.
 		
 		//Game Input.
 		void getInput();//Checks for User Input. Changes Game Values.
@@ -52,6 +53,7 @@ class Game
 		bool mapUnitSelected;
 		Unit myUnits[24][12];
 		Map map;
+		int moveSwitch;
 		int movementDelay;
 		int movementTimer;
 		double blobTimer;

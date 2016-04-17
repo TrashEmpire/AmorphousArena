@@ -64,7 +64,9 @@ Timeline:
 	Hour 42:(2PM)
 		-Blob Generation System Implemented.
 		-Worker system works as well.
-	
+	Hour 43 & 44:(3PM & 4PM)
+		-Movement implemented.
+		-Break. Starting to get sick from all screen time.
 Completion List:
 	-Update Makefile for easy edits. CHECK
 	-Draw placeholder graphics to screen. CHECK
@@ -86,7 +88,8 @@ Completion List:
 		-Allow unit drops in certain area. CHECK
 		-Create Amorphous Blob limit and generation. CHECK
 		-Break.
-		-Create Unit Movement. (Pathfinding possibly. Yikes.)
+		-Create Unit Movement. (Pathfinding possibly. Yikes.) CHECK
+		-Add a Unselect Button.
 		-Create Sample Enemy and fighting. ( Both you and enemy Take damage. exceptions with flying )
 		-Create Enemies, and enemy Behavior. (AI, simple. no adaptation. add adaptation if time at end)
 		-Create tower attack. Add win condition. Allow for win.
