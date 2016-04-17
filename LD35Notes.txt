@@ -34,9 +34,17 @@ Timeline:
 	Hour 21 - 22:(5PM & 6PM)
 		-Map Renders on Screen.
 		-You can move around the map as well.
-	Hour 23:
+	Hour 23:(7PM)
 		-Break for Dinner & thinking.
 		-Left Wrist is hurting from all the coding.
+	Hour 24:(8PM)
+		-Down and Up Textures.
+		-Unit Type Textures.
+	Hour 25:(9PM)
+		-Dawn of the Final Day!!
+		-Select floor tiles in game now.
+		-Done for the day. Will wake up early this time though.
+	
 Completion List:
 	-Update Makefile for easy edits. CHECK
 	-Draw placeholder graphics to screen. CHECK
@@ -48,6 +56,24 @@ Completion List:
 		-Code Map Class CHECK
 		-Draw Map Textures. 40x40 CHECK
 		-Render Map. CHECK
+		-Draw and add Textures for Down and Up map buttons. CHECK
+		-Create and Add Tower Texture.
+		-Create Unit Structure.
+		-Create Unit Array.
+		-Create and Add Textures for Unit Drops.
+		-Allow unit drops in certain area.
+		-Create Amorphous Blob limit and generation.
+		-Break.
+		-Create Unit Movement. (Pathfinding possibly. Yikes.)
+		-Create Sample Enemy and fighting. ( Both you and enemy Take damage. exceptions with flying )
+		-Create Enemies, and enemy Behavior. (AI, simple. no adaptation. add adaptation if time at end)
+		-Create tower attack. Add win condition. Allow for win.
+	-Polish:
+		-Polish AI.
+		-Animate Buttons.
+		-Animate Movement.
+		-Animate Attacks.
+		-Animate Deaths.
 
 Brainstorm:
 	-You are a space traveler who likes to turn planets into wierd amorphous blobs with a large ray beam. It is your art. ???

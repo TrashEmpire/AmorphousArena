@@ -31,6 +31,8 @@ class Game
 		
 		//Logic Variables.
 		int viewPosition;
+		int selectedX;
+		int selectedY;
 		
 		//State Variables.
 		bool startMenuState;
@@ -45,6 +47,9 @@ class Game
 		SDL_Event myEvent;
 		
 		//Textures.
+		SDL_Texture* floorTileSelect;
+		SDL_Texture* downArrow;
+		SDL_Texture* upArrow;
 		SDL_Texture* wallTile;
 		SDL_Texture* floorTile;
 		SDL_Texture* redTile;

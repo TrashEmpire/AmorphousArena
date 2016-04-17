@@ -42,7 +42,8 @@ Game::Game()
 	resetState();
 	startMenuState = true;
 	quitGame = false;
-	
+	selectedX = -1;
+	selectedY = -1;
 	initGraphics();
 	//End of Constructor Here.
 }
@@ -194,6 +195,21 @@ void Game::initGraphics()
 	surf = SDL_LoadBMP("assets\\redTile.bmp");
 	redTile = SDL_CreateTextureFromSurface( myRenderer, surf );
 	SDL_FreeSurface( surf );
+	
+	//Up Arrow Texture.
+	surf = SDL_LoadBMP("assets\\upArrow.bmp");
+	upArrow = SDL_CreateTextureFromSurface( myRenderer, surf );
+	SDL_FreeSurface( surf );
+	
+	//Down Arrow Texture.
+	surf = SDL_LoadBMP("assets\\downArrow.bmp");
+	downArrow = SDL_CreateTextureFromSurface( myRenderer, surf );
+	SDL_FreeSurface( surf );
+	
+	surf = SDL_LoadBMP("assets\\floorTileSelect.bmp");
+	floorTileSelect = SDL_CreateTextureFromSurface( myRenderer, surf );
+	SDL_FreeSurface( surf );
+	
 }
 
 void Game::render()
@@ -288,6 +304,13 @@ void Game::drawGame()
 	SDL_RenderClear( myRenderer );
 	
 	drawMap();
+	SDL_Rect rect;
+	
+	//Draw the Arrows.
+	rect.x=0;rect.y=0;rect.w=640;rect.h=53;
+	SDL_RenderCopy( myRenderer, upArrow, NULL, &rect );
+	rect.x=0;rect.y=427;rect.w=640;rect.h=53;
+	SDL_RenderCopy( myRenderer, downArrow, NULL, &rect );
 	
 	SDL_RenderPresent( myRenderer );
 }
@@ -328,6 +351,28 @@ void Game::drawMap()
 					break;
 			}
 			
+		}
+	}
+	
+	
+	//Draw Selected Tile.
+	if(selectedX != -1 || selectedY != -1 )
+	{			
+		SDL_Rect rect;
+
+		int x = selectedX * 53;
+		int y = (selectedY - viewPosition) * 53;
+		y = y + 53;
+		
+		if(map.getMapValue(selectedX, selectedY) == 0)
+		{			
+			rect.x = x;rect.y = y;rect.w = 53;rect.h=53;
+			SDL_RenderCopy( myRenderer, floorTileSelect, NULL, &rect);
+		}
+		else
+		{
+			selectedX = -1;
+			selectedY = -1;
 		}
 	}
 }
@@ -457,6 +502,20 @@ void Game::getMouseInput(SDL_Event* event)
 				viewPosition = viewPosition + 1;
 			}
 		}
+		
+		if(testBounds(mouseX, mouseY, 0, 53, 640, 374) == true)
+		{
+			//You pressed the map somewhere.
+			int x = mouseX;
+			int y = mouseY;
+			y = y - 53;//Get Rid of the boundary at the top.
+			y = y / 53;
+			x = x / 53;
+			y = y + viewPosition;//map reasons.
+			selectedX = x;
+			selectedY = y;
+		}
+		//End of Game State.
 	}
 	
 	//End of Mouse Input.
@@ -476,6 +535,9 @@ bool Game::testBounds(int testX, int testY, int x, int y, int x2, int y2)
 Game::~Game()
 {
 	//Destructor.
+	SDL_DestroyTexture( floorTileSelect );
+	SDL_DestroyTexture( downArrow );
+	SDL_DestroyTexture( upArrow );
 	SDL_DestroyTexture( redTile );
 	SDL_DestroyTexture( floorTile );
 	SDL_DestroyTexture( wallTile );
