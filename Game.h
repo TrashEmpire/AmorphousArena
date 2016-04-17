@@ -1,6 +1,16 @@
 #include<iostream>
 #include<SDL.h>
 
+//Unit Structure.
+struct Unit
+{
+	bool exists;
+	int type;
+	int health;
+	int damage;
+	bool flying;
+};
+
 class Game
 {
 	public:
@@ -34,6 +44,7 @@ class Game
 		int selectedX;
 		int selectedY;
 		int unitSelected; //-1 if no unit. 0 if worker, 1 if basic, 2 if flying, 3 if advanced.
+		Unit myUnits[24][12];
 		
 		//State Variables.
 		bool startMenuState;
@@ -48,6 +59,10 @@ class Game
 		SDL_Event myEvent;
 		
 		//Textures.
+		SDL_Texture* workerUnitUp;
+		SDL_Texture* basicUnitUp;
+		SDL_Texture* flyingUnitUp;
+		SDL_Texture* advancedUnitUp;
 		SDL_Texture* selectedWorkerUnitButton;
 		SDL_Texture* selectedBasicUnitButton;
 		SDL_Texture* selectedFlyingUnitButton;

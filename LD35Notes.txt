@@ -68,8 +68,10 @@ Completion List:
 		-Draw and add Textures for Down and Up map buttons. CHECK
 		-Create and Add Tower Texture. CHECK
 		-Create and Add Textures for Unit Drops. CHECK
-		-Create Unit Structure.
-		-Create Unit Array.
+		-Code Unit Selection. CHECK
+		-Create Unit Structure. CHECK
+		-Create Unit Array. CHECK
+		-Create System to draw Units to Screen. CHECK
 		-Allow unit drops in certain area.
 		-Create Amorphous Blob limit and generation.
 		-Break.

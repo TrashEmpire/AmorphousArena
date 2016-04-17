@@ -46,6 +46,16 @@ Game::Game()
 	selectedY = -1;
 	unitSelected = -1;
 	initGraphics();
+	
+	//Declare All Units to Default Values.
+	for(int a = 0; a < 24; a++)
+	{
+		for(int b = 0; b < 12; b++)
+		{
+			myUnits[a][b].exists = false;
+			myUnits[a][b].flying = false;
+		}
+	}
 	//End of Constructor Here.
 }
 
@@ -91,6 +101,16 @@ Game::Game(int width, int height)
 	selectedY = -1;
 	unitSelected = -1;
 	initGraphics();
+	
+	//Declare All Units to Default Values.
+	for(int a = 0; a < 24; a++)
+	{
+		for(int b = 0; b < 12; b++)
+		{
+			myUnits[a][b].exists = false;
+			myUnits[a][b].flying = false;
+		}
+	}
 	//End of Constructor Here.
 }
 
@@ -268,6 +288,25 @@ void Game::initGraphics()
 	surf = SDL_LoadBMP("assets\\selectedAdvancedUnitButton.bmp");
 	selectedAdvancedUnitButton = SDL_CreateTextureFromSurface( myRenderer, surf );
 	SDL_FreeSurface( surf );
+	
+	//Worker Unit Up Texture.
+	surf = SDL_LoadBMP("assets\\workerUnit.bmp");
+	workerUnitUp = SDL_CreateTextureFromSurface( myRenderer, surf );
+	SDL_FreeSurface( surf );
+	//Basic Unit Up Texture.
+	surf = SDL_LoadBMP("assets\\basicUnitUp.bmp");
+	basicUnitUp = SDL_CreateTextureFromSurface( myRenderer, surf );
+	SDL_FreeSurface( surf );	
+	
+	//Flying Unit Up Texture.
+	surf = SDL_LoadBMP("assets\\flyingUnitUp.bmp");
+	flyingUnitUp = SDL_CreateTextureFromSurface( myRenderer, surf );
+	SDL_FreeSurface( surf );	
+	
+	//Advanced Unit Up Texture.
+	surf = SDL_LoadBMP("assets\\advancedUnitUp.bmp");
+	advancedUnitUp = SDL_CreateTextureFromSurface( myRenderer, surf );
+	SDL_FreeSurface( surf );	
 	
 }
 
@@ -465,6 +504,39 @@ void Game::drawMap()
 				default:
 					std::cout << "Unknown Tile Value..." << std::endl;
 					break;
+			}
+			
+			//Draw Units.
+			if(tileValue == 0)
+			{
+				//Draw Units if the tile works.
+				if(myUnits[a][b].exists == true)
+				{
+					//Draw the unit.
+					if(myUnits[a][b].type == 0)
+					{
+						//Draw Worker Unit Here.
+						SDL_RenderCopy( myRenderer, workerUnitUp, NULL, &rect );
+					}
+					
+					if(myUnits[a][b].type == 1)
+					{
+						//Draw Basic Unit Here.
+						SDL_RenderCopy( myRenderer, basicUnitUp, NULL, &rect );
+					}
+					
+					if(myUnits[a][b].type == 2)
+					{
+						//Draw Flying Unit Here.
+						SDL_RenderCopy( myRenderer, flyingUnitUp, NULL, &rect );
+					}
+					
+					if(myUnits[a][b].type == 3)
+					{
+						//Draw Advanced Unit Here.
+						SDL_RenderCopy( myRenderer, advancedUnitUp, NULL, &rect );
+					}
+				}
 			}
 			
 		}
@@ -764,6 +836,10 @@ bool Game::testBounds(int testX, int testY, int x, int y, int x2, int y2)
 Game::~Game()
 {
 	//Destructor.
+	SDL_DestroyTexture( workerUnitUp );
+	SDL_DestroyTexture( basicUnitUp );
+	SDL_DestroyTexture( flyingUnitUp );
+	SDL_DestroyTexture( advancedUnitUp );
 	SDL_DestroyTexture( selectedWorkerUnitButton );
 	SDL_DestroyTexture( selectedBasicUnitButton );
 	SDL_DestroyTexture( selectedFlyingUnitButton );
