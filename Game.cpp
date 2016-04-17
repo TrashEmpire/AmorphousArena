@@ -174,8 +174,15 @@ void Game::update()
 	//Game Logic Here.
 	if(gameState == true)
 	{
+		//Movement Stuff Here.
+		if((SDL_GetTicks() - movementTimer) > movementDelay)
+		{
+			move();
+			movementTimer = SDL_GetTicks();
+		}
+		
 		//Timer and blob counting stuff here.
-		blobGenerationDelay = 3000 - (250 * workerCount);//Can go down to .5 seconds.
+		blobGenerationDelay = 3000 - (250 * workerCount);//Can go down to 1.5 seconds.
 		
 		if((SDL_GetTicks() - (int)blobTimer) > blobGenerationDelay)
 		{
@@ -188,6 +195,12 @@ void Game::update()
 		}
 	}
 }
+
+void Game::move()
+{
+	
+}
+
 
 void Game::initGraphics()
 {
@@ -338,7 +351,25 @@ void Game::initGraphics()
 	blobTimerText =  SDL_CreateTextureFromSurface( myRenderer, surf );//initialized to something random.
 	SDL_FreeSurface( surf );	
 	
+	//select worker up
+	surf = SDL_LoadBMP("assets\\workerSelectUp.bmp");
+	workerSelectUp = SDL_CreateTextureFromSurface( myRenderer, surf );
+	SDL_FreeSurface( surf );
 	
+	//select basic up
+	surf = SDL_LoadBMP("assets\\basicSelectUp.bmp");
+	basicSelectUp = SDL_CreateTextureFromSurface( myRenderer, surf );
+	SDL_FreeSurface( surf );
+	
+	//select flying up
+	surf = SDL_LoadBMP("assets\\flyingSelectUp.bmp");
+	flyingSelectUp = SDL_CreateTextureFromSurface( myRenderer, surf );
+	SDL_FreeSurface( surf );
+	
+	//select advanced up.
+	surf = SDL_LoadBMP("assets\\advancedSelectUp.bmp");
+	advancedSelectUp = SDL_CreateTextureFromSurface( myRenderer, surf );
+	SDL_FreeSurface( surf );
 }
 
 void Game::render()
@@ -674,7 +705,40 @@ void Game::drawMap()
 		if(map.getMapValue(selectedX, selectedY) == 0)
 		{			
 			rect.x = x;rect.y = y;rect.w = 53;rect.h=53;
-			SDL_RenderCopy( myRenderer, floorTileSelect, NULL, &rect);
+			
+			if(myUnits[selectedY][selectedX].exists == true)
+			{
+				//Draw the selected unit.
+				//you selected a unit.
+				mapUnitSelected = true;
+				int value = myUnits[selectedY][selectedX].type;
+				
+				switch(value)
+				{
+					case 0:
+						//worker.
+						SDL_RenderCopy( myRenderer, workerSelectUp, NULL, &rect);
+						break;
+					case 1:
+						//basic.
+						SDL_RenderCopy( myRenderer, basicSelectUp, NULL, &rect );
+						break;
+					case 2:
+						//flying.
+						SDL_RenderCopy( myRenderer, flyingSelectUp, NULL, &rect );
+						break;
+					case 3:
+						//advanced
+						SDL_RenderCopy( myRenderer, advancedSelectUp, NULL, &rect );
+						break;
+				}
+			}
+			else
+			{
+				rect.x = x;rect.y = y;rect.w = 53;rect.h=53;
+				SDL_RenderCopy( myRenderer, floorTileSelect, NULL, &rect);	
+			}
+			
 		}
 		else
 		{
@@ -785,10 +849,13 @@ void Game::getMouseInput(SDL_Event* event)
 			//You Clicked Play Game.
 			resetState();
 			gameState = true;
+			mapUnitSelected = false;
 			blobTimer = (double)SDL_GetTicks();
 			blobCounter = 0;
 			workerCount = 0;
 			blobGenerationDelay = 3000;
+			movementDelay = 250;
+			movementTimer = SDL_GetTicks();
 			viewPosition = 18;//max is 24
 		}
 		
@@ -824,6 +891,21 @@ void Game::getMouseInput(SDL_Event* event)
 			x = x / 53;
 			y = y + viewPosition;//map reasons.
 			
+			if(mapUnitSelected == true)
+			{
+				//Get ready to create a goal position. for unit selected.
+				if(map.getMapValue(x, y) == 0)
+				{
+					//you can move a unit here.
+					myUnits[selectedY][selectedX].xGoal = x - selectedX;
+					myUnits[selectedY][selectedX].yGoal = y - selectedY;
+					
+					//works //std::cout << "your unit wants to move X: " << (x - selectedX) << " Y: " << (y - selectedY) << std::endl;
+				}
+				
+				mapUnitSelected = false;				
+			}
+			
 			if(unitSelected != -1)
 			{
 				//Drop Unit code.
@@ -839,6 +921,8 @@ void Game::getMouseInput(SDL_Event* event)
 							myUnits[y][x].health = 2;
 							myUnits[y][x].damage = 0;
 							myUnits[y][x].flying = false;
+							myUnits[y][x].xGoal = 0;
+							myUnits[y][x].yGoal = 0;
 							blobCounter = blobCounter - 2;
 							workerCount++;
 						}
@@ -854,6 +938,8 @@ void Game::getMouseInput(SDL_Event* event)
 							myUnits[y][x].health = 4;
 							myUnits[y][x].damage = 1;
 							myUnits[y][x].flying = false;
+							myUnits[y][x].xGoal = 0;
+							myUnits[y][x].yGoal = 0;
 							blobCounter = blobCounter - 2;
 						}
 						
@@ -869,6 +955,8 @@ void Game::getMouseInput(SDL_Event* event)
 							myUnits[y][x].health = 4;
 							myUnits[y][x].damage = 1;
 							myUnits[y][x].flying = true;	
+							myUnits[y][x].xGoal = 0;
+							myUnits[y][x].yGoal = 0;
 							blobCounter = blobCounter - 4;
 						}
 						
@@ -884,6 +972,8 @@ void Game::getMouseInput(SDL_Event* event)
 							myUnits[y][x].health = 10;
 							myUnits[y][x].damage = 3;
 							myUnits[y][x].flying = false;	
+							myUnits[y][x].xGoal = 0;
+							myUnits[y][x].yGoal = 0;
 							blobCounter = blobCounter - 5;
 						}
 						
@@ -962,6 +1052,10 @@ Game::~Game()
 	TTF_CloseFont( libraSans );
 	libraSans = NULL;
 	
+	SDL_DestroyTexture( workerSelectUp );
+	SDL_DestroyTexture( basicSelectUp );
+	SDL_DestroyTexture( flyingSelectUp );
+	SDL_DestroyTexture( advancedSelectUp );
 	SDL_DestroyTexture( workerUnitUp );
 	SDL_DestroyTexture( basicUnitUp );
 	SDL_DestroyTexture( flyingUnitUp );

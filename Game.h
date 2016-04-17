@@ -11,6 +11,8 @@ struct Unit
 	int health;
 	int damage;
 	bool flying;
+	int xGoal;
+	int yGoal;
 };
 
 class Game
@@ -33,6 +35,7 @@ class Game
 		
 		//Game Logic.
 		void update();//Game Logic Here.
+		void move();//moves all units one block in their destination.
 		
 		//Game Input.
 		void getInput();//Checks for User Input. Changes Game Values.
@@ -46,8 +49,11 @@ class Game
 		int selectedX;
 		int selectedY;
 		int unitSelected; //-1 if no unit. 0 if worker, 1 if basic, 2 if flying, 3 if advanced.
+		bool mapUnitSelected;
 		Unit myUnits[24][12];
 		Map map;
+		int movementDelay;
+		int movementTimer;
 		double blobTimer;
 		int blobCounter;
 		int blobGenerationDelay;
@@ -71,6 +77,11 @@ class Game
 		//Textures.
 		SDL_Texture* blobTimerText; //special thing as well.
 		SDL_Texture* blobCounterText;//Special thing. Don't have destroy texture.
+		
+		SDL_Texture* workerSelectUp;
+		SDL_Texture* basicSelectUp;
+		SDL_Texture* flyingSelectUp;
+		SDL_Texture* advancedSelectUp;
 		SDL_Texture* workerUnitUp;
 		SDL_Texture* basicUnitUp;
 		SDL_Texture* flyingUnitUp;
