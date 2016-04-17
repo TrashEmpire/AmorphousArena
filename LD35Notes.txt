@@ -72,7 +72,7 @@ Completion List:
 		-Create Unit Structure. CHECK
 		-Create Unit Array. CHECK
 		-Create System to draw Units to Screen. CHECK
-		-Allow unit drops in certain area.
+		-Allow unit drops in certain area. CHECK
 		-Create Amorphous Blob limit and generation.
 		-Break.
 		-Create Unit Movement. (Pathfinding possibly. Yikes.)

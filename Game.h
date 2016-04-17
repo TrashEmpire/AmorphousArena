@@ -1,5 +1,6 @@
 #include<iostream>
 #include<SDL.h>
+#include "Map.h"
 
 //Unit Structure.
 struct Unit
@@ -45,6 +46,7 @@ class Game
 		int selectedY;
 		int unitSelected; //-1 if no unit. 0 if worker, 1 if basic, 2 if flying, 3 if advanced.
 		Unit myUnits[24][12];
+		Map map;
 		
 		//State Variables.
 		bool startMenuState;

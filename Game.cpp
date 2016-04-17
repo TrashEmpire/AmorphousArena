@@ -56,6 +56,8 @@ Game::Game()
 			myUnits[a][b].flying = false;
 		}
 	}
+	
+	map = Map();
 	//End of Constructor Here.
 }
 
@@ -471,9 +473,7 @@ void Game::drawGame()
 }
 
 void Game::drawMap()
-{
-	Map map = Map();
-	
+{	
 	int currentMapPosition = viewPosition;
 	
 	for(int a = currentMapPosition; a < currentMapPosition + 6; a++)
@@ -755,21 +755,62 @@ void Game::getMouseInput(SDL_Event* event)
 		if(testBounds(mouseX, mouseY, 0, 53, 640, 374) == true)
 		{
 			//You pressed the map somewhere.
+			int x = mouseX;
+			int y = mouseY;
+			y = y - 53;//Get Rid of the boundary at the top.
+			y = y / 53;
+			x = x / 53;
+			y = y + viewPosition;//map reasons.
 			
 			if(unitSelected != -1)
 			{
 				//Drop Unit code.
-				
+				if(map.getMapValue(x, y) == 0 && y > 20)
+				{
+					if(unitSelected == 0)
+					{
+						//Drop Worker Unit.
+						myUnits[y][x].exists = true;
+						myUnits[y][x].type = 0;
+						myUnits[y][x].health = 2;
+						myUnits[y][x].damage = 0;
+						myUnits[y][x].flying = false;
+					}
+					
+					if(unitSelected == 1)
+					{
+						//Drop Basic Unit.
+						myUnits[y][x].exists = true;
+						myUnits[y][x].type = 1;
+						myUnits[y][x].health = 4;
+						myUnits[y][x].damage = 1;
+						myUnits[y][x].flying = false;
+					}
+					
+					if(unitSelected == 2)
+					{
+						//Drop Flying Unit.
+						myUnits[y][x].exists = true;
+						myUnits[y][x].type = 2;
+						myUnits[y][x].health = 4;
+						myUnits[y][x].damage = 1;
+						myUnits[y][x].flying = true;
+					}
+					
+					if(unitSelected == 3)
+					{
+						//Drop Advanced Unit.
+						myUnits[y][x].exists = true;
+						myUnits[y][x].type = 3;
+						myUnits[y][x].health = 10;
+						myUnits[y][x].damage = 3;
+						myUnits[y][x].flying = false;
+					}
+				}
 				unitSelected = -1;//Redundant. Check Code Below. Doesn't matter tho. So I will keep this.
 			}
 			else
 			{					
-				int x = mouseX;
-				int y = mouseY;
-				y = y - 53;//Get Rid of the boundary at the top.
-				y = y / 53;
-				x = x / 53;
-				y = y + viewPosition;//map reasons.
 				selectedX = x;
 				selectedY = y;
 			}

@@ -1,5 +1,7 @@
 #include<iostream>
 #include<SDL.h>
+#ifndef MAP_H
+#define MAP_H
 
 class Map
 {
@@ -10,3 +12,5 @@ class Map
 		int myMap[24][12];
 	
 };
+
+#endif
