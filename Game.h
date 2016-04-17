@@ -80,6 +80,7 @@ class Game
 		SDL_Texture* blobTimerText; //special thing as well.
 		SDL_Texture* blobCounterText;//Special thing. Don't have destroy texture.
 		
+		SDL_Texture* unselectButton;
 		SDL_Texture* workerSelectUp;
 		SDL_Texture* basicSelectUp;
 		SDL_Texture* flyingSelectUp;

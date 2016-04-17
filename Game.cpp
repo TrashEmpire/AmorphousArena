@@ -493,6 +493,11 @@ void Game::initGraphics()
 	surf = SDL_LoadBMP("assets\\advancedSelectUp.bmp");
 	advancedSelectUp = SDL_CreateTextureFromSurface( myRenderer, surf );
 	SDL_FreeSurface( surf );
+	
+	//unselect button.
+	surf = SDL_LoadBMP("assets\\unselect.bmp");
+	unselectButton = SDL_CreateTextureFromSurface( myRenderer, surf );
+	SDL_FreeSurface( surf );
 }
 
 void Game::render()
@@ -594,11 +599,10 @@ void Game::drawGame()
 	//Draw the UI Buffer.
 	rect.x=0;rect.y=374;rect.w=53;rect.h=53;
 	SDL_RenderCopy( myRenderer, UIBuffer, NULL, &rect);
-	rect.x=265;
-	SDL_RenderCopy( myRenderer, UIBuffer, NULL, &rect);
-	rect.x=318;
-	SDL_RenderCopy( myRenderer, UIBuffer, NULL, &rect);
-	rect.x=371;
+	rect.x=265;rect.w=106;
+	SDL_RenderCopy( myRenderer, unselectButton, NULL, &rect);
+
+	rect.x=371;rect.y=374;rect.w=53;rect.h=53;
 	SDL_RenderCopy( myRenderer, UIBuffer, NULL, &rect);
 	
 	//Is the worker Selected?
@@ -905,6 +909,16 @@ void Game::getKeyInput(SDL_Keycode key)
 		quitGame = true;
 	}
 	
+	if(key == SDLK_SPACE)
+	{
+		if(gameState == true)
+		{
+			selectedX = -1;
+			selectedY = -1;
+			unitSelected = -1;
+		}
+	}
+	
 	if(key == SDLK_BACKSPACE)
 	{
 		if(gameState != true)
@@ -1157,6 +1171,12 @@ void Game::getMouseInput(SDL_Event* event)
 			unitSelected = -1;
 		}
 		
+		if(testBounds(mouseX, mouseY, 265, 374, 371, 427) == true)
+		{
+			//you clicked the unselect button.
+			selectedX=-1;selectedY=-1;
+			unitSelected=-1;
+		}
 		//End of Game State.
 	}
 	
@@ -1180,6 +1200,7 @@ Game::~Game()
 	TTF_CloseFont( libraSans );
 	libraSans = NULL;
 	
+	SDL_DestroyTexture( unselectButton );
 	SDL_DestroyTexture( workerSelectUp );
 	SDL_DestroyTexture( basicSelectUp );
 	SDL_DestroyTexture( flyingSelectUp );

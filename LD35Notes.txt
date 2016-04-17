@@ -66,7 +66,11 @@ Timeline:
 		-Worker system works as well.
 	Hour 43 & 44:(3PM & 4PM)
 		-Movement implemented.
+		-Unselect Button, or just press space.
 		-Break. Starting to get sick from all screen time.
+	Hour 45:
+		-only 3 more hours(inclusive)
+		
 Completion List:
 	-Update Makefile for easy edits. CHECK
 	-Draw placeholder graphics to screen. CHECK
@@ -89,7 +93,7 @@ Completion List:
 		-Create Amorphous Blob limit and generation. CHECK
 		-Break.
 		-Create Unit Movement. (Pathfinding possibly. Yikes.) CHECK
-		-Add a Unselect Button.
+		-Add a Unselect Button. CHECK
 		-Create Sample Enemy and fighting. ( Both you and enemy Take damage. exceptions with flying )
 		-Create Enemies, and enemy Behavior. (AI, simple. no adaptation. add adaptation if time at end)
 		-Create tower attack. Add win condition. Allow for win.
