@@ -4,6 +4,7 @@ Ludum Dare 35 Notes:
 Music Listened To:
 	-Elvis Presley - Suspicious Minds.
 	-Pink Floyd - Dark Side of the Moon (Album)
+	-Pink Floyd - Animals (Album)
 	-
 
 Timeline:
@@ -44,6 +45,11 @@ Timeline:
 		-Dawn of the Final Day!!
 		-Select floor tiles in game now.
 		-Done for the day. Will wake up early this time though.
+	Hour 36 & 37:(8AM & 9AM)
+		-Slept in a little too much again.
+		-I may actually be able to finish. : )
+		-Just Finished Drawing All textures needed for basic game to finish. :D
+		-Serious Code Time... After Breakfast.
 	
 Completion List:
 	-Update Makefile for easy edits. CHECK
@@ -57,10 +63,10 @@ Completion List:
 		-Draw Map Textures. 40x40 CHECK
 		-Render Map. CHECK
 		-Draw and add Textures for Down and Up map buttons. CHECK
-		-Create and Add Tower Texture.
+		-Create and Add Tower Texture. CHECK
+		-Create and Add Textures for Unit Drops.
 		-Create Unit Structure.
 		-Create Unit Array.
-		-Create and Add Textures for Unit Drops.
 		-Allow unit drops in certain area.
 		-Create Amorphous Blob limit and generation.
 		-Break.

@@ -206,9 +206,21 @@ void Game::initGraphics()
 	downArrow = SDL_CreateTextureFromSurface( myRenderer, surf );
 	SDL_FreeSurface( surf );
 	
+	//Selected Tile Texture.
 	surf = SDL_LoadBMP("assets\\floorTileSelect.bmp");
 	floorTileSelect = SDL_CreateTextureFromSurface( myRenderer, surf );
 	SDL_FreeSurface( surf );
+	
+	//Tower Texture.
+	surf = SDL_LoadBMP("assets\\tower.bmp");
+	towerTexture = SDL_CreateTextureFromSurface( myRenderer, surf );
+	SDL_FreeSurface( surf );
+	
+	//Enemy Tower Texture.
+	surf = SDL_LoadBMP("assets\\enemyTower.bmp");
+	enemyTowerTexture = SDL_CreateTextureFromSurface( myRenderer, surf );
+	SDL_FreeSurface( surf );
+	
 	
 }
 
@@ -306,6 +318,9 @@ void Game::drawGame()
 	drawMap();
 	SDL_Rect rect;
 	
+	//Draw the Blob Transformation UI Bar, and the Blob Counter.
+	//4 Units. Worker, Basic Attacker, Advanced Attacker, Flyer.
+	
 	//Draw the Arrows.
 	rect.x=0;rect.y=0;rect.w=640;rect.h=53;
 	SDL_RenderCopy( myRenderer, upArrow, NULL, &rect );
@@ -354,6 +369,67 @@ void Game::drawMap()
 		}
 	}
 	
+	//Draw the Enemy Tower.
+	if(viewPosition < 3)
+	{
+		if(viewPosition == 0)
+		{
+			SDL_Rect rect;
+			rect.x = 212;rect.y = 106;
+			rect.w = 212; rect.h = 106;
+			
+			SDL_RenderCopy( myRenderer, enemyTowerTexture, NULL, &rect );
+		}
+		
+		if(viewPosition == 1)
+		{
+			SDL_Rect rect;
+			rect.x = 212;rect.y = 53;
+			rect.w = 212; rect.h = 106;
+			
+			SDL_RenderCopy( myRenderer, enemyTowerTexture, NULL, &rect );
+		}
+		
+		if(viewPosition == 2)
+		{
+			SDL_Rect rect;
+			rect.x = 212;rect.y = 0;
+			rect.w = 212; rect.h = 106;
+			
+			SDL_RenderCopy( myRenderer, enemyTowerTexture, NULL, &rect );
+		}
+	}
+	
+	//Draw the Tower.
+	if(viewPosition > 15)
+	{
+		if(viewPosition == 16)
+		{
+			SDL_Rect rect;
+			rect.x = 212;rect.y = 318;
+			rect.w = 212;rect.h = 106;
+			
+			SDL_RenderCopy( myRenderer, towerTexture, NULL, &rect );
+		}
+		
+		if(viewPosition == 17)
+		{
+			SDL_Rect rect;
+			rect.x = 212;rect.y = 265;
+			rect.w = 212; rect.h = 106;
+			
+			SDL_RenderCopy( myRenderer, towerTexture, NULL, &rect );
+		}
+		
+		if(viewPosition == 18)
+		{
+			SDL_Rect rect;
+			rect.x = 212;rect.y = 212;
+			rect.w = 212; rect.h = 106;
+			
+			SDL_RenderCopy( myRenderer, towerTexture, NULL, &rect );
+		}
+	}
 	
 	//Draw Selected Tile.
 	if(selectedX != -1 || selectedY != -1 )
@@ -535,6 +611,8 @@ bool Game::testBounds(int testX, int testY, int x, int y, int x2, int y2)
 Game::~Game()
 {
 	//Destructor.
+	SDL_DestroyTexture( enemyTowerTexture );
+	SDL_DestroyTexture( towerTexture );
 	SDL_DestroyTexture( floorTileSelect );
 	SDL_DestroyTexture( downArrow );
 	SDL_DestroyTexture( upArrow );

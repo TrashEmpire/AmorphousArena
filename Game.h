@@ -47,6 +47,8 @@ class Game
 		SDL_Event myEvent;
 		
 		//Textures.
+		SDL_Texture* enemyTowerTexture;
+		SDL_Texture* towerTexture;
 		SDL_Texture* floorTileSelect;
 		SDL_Texture* downArrow;
 		SDL_Texture* upArrow;
