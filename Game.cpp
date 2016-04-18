@@ -287,7 +287,7 @@ void Game::update()
 					enemyUnits[3][2].damage = 2;
 					enemyUnits[3][2].flying = true;
 					enemyUnits[3][2].xGoal = 0;
-					enemyUnits[3][2].yGoal = 17;
+					enemyUnits[3][2].yGoal = 18;
 					enemyUnits[3][2].justMoved = false;
 					enemyUnits[3][2].justAttacked = false;
 					
@@ -297,7 +297,7 @@ void Game::update()
 					enemyUnits[3][1].damage = 2;
 					enemyUnits[3][1].flying = true;
 					enemyUnits[3][1].xGoal = 0;
-					enemyUnits[3][1].yGoal = 17;
+					enemyUnits[3][1].yGoal = 18;
 					enemyUnits[3][1].justMoved = false;
 					enemyUnits[3][1].justAttacked = false;
 					break;
