@@ -33,6 +33,7 @@ class Game
 		void drawAbout();//Draw the about Menu.
 		void drawGameMenu();//Draw the Game Menu.
 		void drawGame();//Draw the Game.
+		void drawEnemies();//Draws enemies.
 		void drawMap();//Draws a map to the screen. *DOES NOT PRESENT*
 		
 		//Game Logic.
@@ -40,6 +41,8 @@ class Game
 		void move();//moves all units one block in the direction to their destination.
 		void attack();//Similar to move. attacks enemies or the tower adjacent to it.
 		void resetUnits();
+		void aiMove();//AI Executes his moves.
+		void removeDead();
 		
 		//Game Input.
 		void getInput();//Checks for User Input. Changes Game Values.
@@ -55,12 +58,16 @@ class Game
 		int unitSelected; //-1 if no unit. 0 if worker, 1 if basic, 2 if flying, 3 if advanced.
 		bool mapUnitSelected;
 		Unit myUnits[24][12];
+		Unit enemyUnits[24][12];
 		Map map;
 		int moveSwitch;
 		int movementDelay;
 		int movementTimer;
 		int attackDelay;
 		int attackTimer;
+		int aiDelay;
+		int aiTimer;
+		int aiMoveCounter;
 		double blobTimer;
 		int blobCounter;
 		int blobGenerationDelay;
@@ -89,6 +96,9 @@ class Game
 		SDL_Texture* blobTimerText; //special thing as well.
 		SDL_Texture* blobCounterText;//Special thing. Don't have destroy texture.
 		
+		SDL_Texture* enemyBasicUnit;
+		SDL_Texture* enemyFlyingUnit;
+		SDL_Texture* enemyAdvancedUnit;
 		SDL_Texture* youWin;
 		SDL_Texture* youLose;
 		SDL_Texture* unselectButton;

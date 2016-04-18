@@ -116,6 +116,9 @@ void Game::resetUnits()
 		{
 			myUnits[a][b].exists = false;
 			myUnits[a][b].flying = false;
+			
+			enemyUnits[a][b].exists = false;
+			enemyUnits[a][b].flying = false;
 		}
 	}
 }
@@ -127,6 +130,8 @@ void Game::resetState()
 	gameMenuState = false;
 	gameState = false;
 	aboutState = false;
+	winState = false;
+	loseState = false;
 }
 
 bool Game::run()
@@ -164,12 +169,38 @@ bool Game::run()
 	
 }
 
+void Game::removeDead()
+{
+	for(int a = 0; a < 24; a++)
+	{
+		for(int b = 0; b < 12; b++)
+		{
+			 if(myUnits[a][b].exists == true)
+			 {
+				 if(myUnits[a][b].health <= 0)
+				 {
+					 myUnits[a][b].exists = false;
+				 }
+			 }
+			 
+			 if(enemyUnits[a][b].exists == true)
+			 {
+				 if(enemyUnits[a][b].health <= 0)
+				 {
+					 enemyUnits[a][b].exists = false;
+				 }
+			 }
+		}
+	}
+}
+
 void Game::update()
 {
 	//Game Logic Here.
 	if(gameState == true)
 	{
-		
+		std::cout << "Your Tower Health: " << towerHealth << " Enemy Tower Health: " << enemyTowerHealth <<std::endl;
+		removeDead();
 		//Lose or Win.
 		if(towerHealth <= 0)
 		{
@@ -193,12 +224,102 @@ void Game::update()
 			{
 				for(int b = 0; b < 24; b++)
 				{
+					enemyUnits[a][b].justAttacked = false;
 					myUnits[a][b].justAttacked = false;
 				}
 			}
 			
 			attack();
 			attackTimer = SDL_GetTicks();
+		}
+		
+		//AI Turn.
+		if((SDL_GetTicks() - aiTimer) > aiDelay)
+		{
+			//Ai moves.
+			switch(aiMoveCounter)
+			{
+				case 0:
+					//First Move. Spawn Basics and drop down the right lane.
+					enemyUnits[3][9].exists = true;
+					enemyUnits[3][9].type = 1;
+					enemyUnits[3][9].health = 2;
+					enemyUnits[3][9].damage = 2;
+					enemyUnits[3][9].flying = false;
+					enemyUnits[3][9].xGoal = 0;
+					enemyUnits[3][9].yGoal = 18;
+					enemyUnits[3][9].justMoved = false;
+					enemyUnits[3][9].justAttacked = false;
+					
+					enemyUnits[3][10].exists = true;
+					enemyUnits[3][10].type = 1;
+					enemyUnits[3][10].health = 2;
+					enemyUnits[3][10].damage = 2;
+					enemyUnits[3][10].flying = false;
+					enemyUnits[3][10].xGoal = 0;
+					enemyUnits[3][10].yGoal = 18;
+					enemyUnits[3][10].justMoved = false;
+					enemyUnits[3][10].justAttacked = false;
+					break;
+				case 1:
+					//Second Move. Push the basics onto the tower. Drop an advanced. 
+					//Push the advanced to the front of your tower.
+					enemyUnits[21][10].xGoal = -2;
+					enemyUnits[21][10].yGoal = 1;
+					enemyUnits[21][9].xGoal = -1;
+					enemyUnits[21][9].yGoal = 0;
+					
+					enemyUnits[3][5].exists = true;
+					enemyUnits[3][5].type = 3;
+					enemyUnits[3][5].health = 10;
+					enemyUnits[3][5].damage = 5;
+					enemyUnits[3][5].flying = false;
+					enemyUnits[3][5].xGoal = 0;
+					enemyUnits[3][5].yGoal = 17;
+					enemyUnits[3][5].justMoved = false;
+					enemyUnits[3][5].justAttacked = false;
+					break;
+				case 2:
+					//Third Move. Drop a Flying and push it down the left lane.
+					enemyUnits[3][2].exists = true;
+					enemyUnits[3][2].type = 2;
+					enemyUnits[3][2].health = 2;
+					enemyUnits[3][2].damage = 2;
+					enemyUnits[3][2].flying = true;
+					enemyUnits[3][2].xGoal = 0;
+					enemyUnits[3][2].yGoal = 17;
+					enemyUnits[3][2].justMoved = false;
+					enemyUnits[3][2].justAttacked = false;
+					
+					enemyUnits[3][1].exists = true;
+					enemyUnits[3][1].type = 2;
+					enemyUnits[3][1].health = 2;
+					enemyUnits[3][1].damage = 2;
+					enemyUnits[3][1].flying = true;
+					enemyUnits[3][1].xGoal = 0;
+					enemyUnits[3][1].yGoal = 17;
+					enemyUnits[3][1].justMoved = false;
+					enemyUnits[3][1].justAttacked = false;
+					break;
+				case 3:
+					//Fourth Move. Push the flying onto my tower.
+					enemyUnits[21][1].xGoal = 2;
+					enemyUnits[21][1].yGoal = 1;
+					
+					enemyUnits[21][2].xGoal = 2;
+					enemyUnits[21][2].yGoal = 0;
+					break;
+			}
+			if(aiMoveCounter >= 3)
+			{
+				aiMoveCounter = 0;
+			}
+			else
+			{
+				aiMoveCounter++;
+			}
+			
+			aiTimer = SDL_GetTicks();
 		}
 		
 		//Movement Stuff Here.
@@ -210,6 +331,7 @@ void Game::update()
 				for(int b = 0; b < 12; b++)
 				{
 					myUnits[a][b].justMoved = false;
+					enemyUnits[a][b].justMoved = false;
 				}
 				
 			}
@@ -235,6 +357,7 @@ void Game::update()
 
 void Game::move()
 {
+	//Move Your Units.
 	for(int a = 0; a < 24; a++)
 	{
 		for(int b = 0; b < 12; b++)
@@ -255,19 +378,26 @@ void Game::move()
 						if(xMove > 0)
 						{
 							//your unit wants to move right.
-							if(map.getMapValue(b + 1, a) == 0 && myUnits[a][b + 1].exists == false)
+							if(enemyUnits[a][b + 1].exists == true)
 							{
-								//no obstacles.
-								if(myUnits[a][b].justMoved == true)
+								
+							}
+							else
+							{
+								if(map.getMapValue(b + 1, a) == 0 && myUnits[a][b + 1].exists == false)
 								{
-									
-								}
-								else
-								{									
-									myUnits[a][b].xGoal -= 1;
-									myUnits[a][b + 1] = myUnits[a][b];
-									myUnits[a][b].exists = false;	
-									myUnits[a][b + 1].justMoved = true;
+									//no obstacles.
+									if(myUnits[a][b].justMoved == true)
+									{
+										
+									}
+									else
+									{									
+										myUnits[a][b].xGoal -= 1;
+										myUnits[a][b + 1] = myUnits[a][b];
+										myUnits[a][b].exists = false;	
+										myUnits[a][b + 1].justMoved = true;
+									}
 								}
 							}
 						}
@@ -276,21 +406,28 @@ void Game::move()
 							//your unit wants to move left.
 							
 							//check if it can.
-							if(map.getMapValue(b - 1, a) == 0 && myUnits[a][b - 1].exists == false)
+							if(enemyUnits[a][b - 1].exists == true)
 							{
-								//no obstacles.
-								if(myUnits[a][b].justMoved == true)
+								
+							}
+							else
+							{
+								if(map.getMapValue(b - 1, a) == 0 && myUnits[a][b - 1].exists == false)
 								{
+									//no obstacles.
+									if(myUnits[a][b].justMoved == true)
+									{
+										
+									}
+									else
+									{
+										myUnits[a][b].xGoal += 1;
+										myUnits[a][b - 1] = myUnits[a][b];
+										myUnits[a][b].exists = false;
+										myUnits[a][b -1].justMoved = true;
+									}
 									
 								}
-								else
-								{
-									myUnits[a][b].xGoal += 1;
-									myUnits[a][b - 1] = myUnits[a][b];
-									myUnits[a][b].exists = false;
-									myUnits[a][b -1].justMoved = true;
-								}
-								
 							}
 						}
 					}
@@ -304,42 +441,55 @@ void Game::move()
 					if(yMove > 0)
 					{
 						//your unit wants to move down.
-						
-						if(map.getMapValue(b, a + 1) == 0 && myUnits[a + 1][b].exists == false)
+						if(enemyUnits[a + 1][b].exists == true)
 						{
-							//no obstacles.
-							if(myUnits[a][b].justMoved == true)
+							
+						}
+						else
+						{
+							if(map.getMapValue(b, a + 1) == 0 && myUnits[a + 1][b].exists == false)
 							{
+								//no obstacles.
+								if(myUnits[a][b].justMoved == true)
+								{
+									
+								}
+								else
+								{
+									myUnits[a][b].yGoal -= 1;
+									myUnits[a + 1][b] = myUnits[a][b];
+									myUnits[a][b].exists = false;
+									myUnits[a + 1][b].justMoved = true;
+								}
 								
 							}
-							else
-							{
-								myUnits[a][b].yGoal -= 1;
-								myUnits[a + 1][b] = myUnits[a][b];
-								myUnits[a][b].exists = false;
-								myUnits[a + 1][b].justMoved = true;
-							}
-							
 						}
 					}
 					else if(yMove < 0)
 					{
 						//your unit wants to move up.
-						if(map.getMapValue(b, a - 1) == 0 && myUnits[a - 1][b].exists == false)
+						if(enemyUnits[a - 1][b].exists == true)
 						{
-							//no obstacles.
-							if(myUnits[a][b].justMoved == true)
+							
+						}
+						else
+						{
+							if(map.getMapValue(b, a - 1) == 0 && myUnits[a - 1][b].exists == false)
 							{
+								//no obstacles.
+								if(myUnits[a][b].justMoved == true)
+								{
+									
+								}
+								else
+								{
+									myUnits[a][b].yGoal += 1;
+									myUnits[a - 1][b] = myUnits[a][b];
+									myUnits[a][b].exists = false;
+									myUnits[a - 1][b].justMoved = true;
+								}
 								
 							}
-							else
-							{
-								myUnits[a][b].yGoal += 1;
-								myUnits[a - 1][b] = myUnits[a][b];
-								myUnits[a][b].exists = false;
-								myUnits[a - 1][b].justMoved = true;
-							}
-							
 						}
 					}
 				}
@@ -348,6 +498,103 @@ void Game::move()
 		}
 	}
 	
+	//Move Enemy Units.
+	for(int a = 0; a < 24; a++)
+	{
+		for(int b = 0; b < 12; b++)
+		{
+			if(enemyUnits[a][b].exists == true)
+			{
+				int xMove = enemyUnits[a][b].xGoal;
+				int yMove = enemyUnits[a][b].yGoal;
+				
+				if(xMove != 0)
+				{
+					//Enemy Unit wants to move on the x axis.
+					if(enemyUnits[a][b].justMoved!= true)
+					{
+						//allow it
+						if(xMove > 0)
+						{
+							//Your unit wants to move right.
+							if(myUnits[a][b + 1].exists == false)
+							{
+								if(map.getMapValue(b + 1, a) == 0 && enemyUnits[a][b + 1].exists == false)
+								{
+									//no obstacles.
+									if(enemyUnits[a][b].justMoved == true)
+									{
+										
+									}
+									else
+									{									
+										enemyUnits[a][b].xGoal -= 1;
+										enemyUnits[a][b + 1] = enemyUnits[a][b];
+										enemyUnits[a][b].exists = false;	
+										enemyUnits[a][b + 1].justMoved = true;
+									}
+								}
+							}
+						}
+						
+						
+						if(xMove < 0)
+						{
+							//your unit wants to move left.
+							if(myUnits[a][b - 1].exists == false)
+							{
+								if(map.getMapValue(b - 1, a) == 0 && enemyUnits[a][b - 1].exists == false)
+								{
+									//no obstacles.
+									if(enemyUnits[a][b].justMoved == true)
+									{
+										
+									}
+									else
+									{
+										enemyUnits[a][b].xGoal += 1;
+										enemyUnits[a][b - 1] = enemyUnits[a][b];
+										enemyUnits[a][b].exists = false;
+										enemyUnits[a][b - 1].justMoved = true;
+									}
+								}
+							}
+						}
+					}
+				}
+				
+				if(yMove > 0)
+				{
+					//Enemy Unit wants to move on the y axis.
+					if(enemyUnits[a][b].justMoved != true)
+					{
+						//allow it.
+						
+						//Check Boundaries. They only moves down. so check that.
+						//check walls, then check units.
+						if(map.getMapValue(b, a + 1) == 0 && enemyUnits[a + 1][b].exists == false)
+						{
+							//allow movement. possibly.
+							if(myUnits[a + 1][b].exists == true)
+							{
+								//bag of nope. no movement.
+							}
+							else
+							{
+								//yay, you can move down.
+								enemyUnits[a][b].yGoal -= 1;
+								enemyUnits[a + 1][b] = enemyUnits[a][b];
+								enemyUnits[a][b].exists = false;
+								enemyUnits[a + 1][b].justMoved = true;
+								
+							}
+						}
+						
+					}
+				}
+			}
+		}
+	}
 	//End of move.
 }
 
@@ -366,7 +613,7 @@ void Game::attack()
 					//You can attack.
 					
 					//Tower in front.
-					if(map.getMapValue(b, a - 1) == 2)
+					if(map.getMapValue(b, a - 1) == 2 && myUnits[a][b].justAttacked == false)
 					{
 						//There is a tower in front of this unit.
 						//Check if it's the enemy tower.
@@ -382,9 +629,20 @@ void Game::attack()
 					}
 					
 					//Enemy in front.
-					
+					if(enemyUnits[a - 1][b].exists == true && myUnits[a][b].justAttacked == false)
+					{
+						if(enemyUnits[a - 1][b].flying == true)
+						{
+							
+						}
+						else
+						{
+						enemyUnits[a - 1][b].health -= myUnits[a][b].damage;
+						myUnits[a][b].justAttacked = true;
+						}
+					}
 					//Tower to the right.
-					if(map.getMapValue(b + 1, a) == 2)
+					if(map.getMapValue(b + 1, a) == 2 && myUnits[a][b].justAttacked == false)
 					{
 						//There is a tower in front of this unit.
 						//Check if it's the enemy tower.
@@ -400,9 +658,22 @@ void Game::attack()
 					}
 					
 					//Enemy to the right.
+					if(enemyUnits[a][b + 1].exists == true && myUnits[a][b].justAttacked == false)
+					{
+						if(enemyUnits[a][b + 1].flying == true)
+						{
+							
+						}
+						else
+						{
+						enemyUnits[a][b + 1].health -= myUnits[a][b].damage;
+						myUnits[a][b].justAttacked = true;
+						}
+						
+					}
 					
 					//Tower Under unit.
-					if(map.getMapValue(b, a + 1) == 2)
+					if(map.getMapValue(b, a + 1) == 2 && myUnits[a][b].justAttacked == false)
 					{
 						//There is a tower in front of this unit.
 						//Check if it's the enemy tower.
@@ -418,9 +689,21 @@ void Game::attack()
 					}
 					
 					//Enemy Under unit.
+					if(enemyUnits[a + 1][b].exists == true && myUnits[a][b].justAttacked == false)
+					{
+						if(enemyUnits[a + 1][b].flying == true)
+						{
+							
+						}
+						else
+						{
+						enemyUnits[a + 1][b].health -= myUnits[a][b].damage;
+						myUnits[a][b].justAttacked = true;
+						}
+					}
 					
 					//Tower to left of unit.
-					if(map.getMapValue(b - 1, a) == 2)
+					if(map.getMapValue(b - 1, a) == 2 && myUnits[a][b].justAttacked == false)
 					{
 						//There is a tower in front of this unit.
 						//Check if it's the enemy tower.
@@ -435,6 +718,152 @@ void Game::attack()
 						
 					}
 					//Enemy to left of unit.
+					if(enemyUnits[a][b - 1].exists == true && myUnits[a][b].justAttacked == false)
+					{
+						//deal damage to them.
+						if(enemyUnits[a][b - 1].flying == true)
+						{
+							
+						}
+						else
+						{
+						enemyUnits[a][b - 1].health -= myUnits[a][b].damage;
+						myUnits[a][b].justAttacked = true;
+						}
+					}
+				}
+			}
+			
+			//Enemy Turn to attack.
+			//Check up direction.
+			if(enemyUnits[a][b].exists == true)
+			{
+				if(enemyUnits[a][b].justAttacked == false)
+				{
+					//You can attack.
+					
+					//Tower in front.
+					if(map.getMapValue(b, a - 1) == 2 && enemyUnits[a][b].justAttacked == false)
+					{
+						//There is a tower in front of this unit.
+						//Check if it's the enemy tower.
+						
+						if(a > 10)//arbritrary value that works.
+						{
+							///it is the enemy tower.
+							//Attack it.
+							towerHealth = towerHealth - enemyUnits[a][b].damage;
+							enemyUnits[a][b].justAttacked = true;
+						}
+						
+					}
+					
+					//Enemy in front.
+					if(myUnits[a - 1][b].exists == true && enemyUnits[a][b].justAttacked == false)
+					{
+						if(myUnits[a - 1][b].flying == true)
+						{
+							
+						}
+						else
+						{
+						myUnits[a - 1][b].health -= enemyUnits[a][b].damage;
+						enemyUnits[a][b].justAttacked = true;
+						}
+						
+					}
+					//Tower to the right.
+					if(map.getMapValue(b + 1, a) == 2 && enemyUnits[a][b].justAttacked == false)
+					{
+						//There is a tower in front of this unit.
+						//Check if it's the enemy tower.
+						
+						if(a > 10)//arbritrary value that works.
+						{
+							///it is the enemy tower.
+							//Attack it.
+							towerHealth = towerHealth - enemyUnits[a][b].damage;
+							enemyUnits[a][b].justAttacked = true;
+						}
+						
+					}
+					
+					//Enemy to the right.
+					if(myUnits[a][b + 1].exists == true && enemyUnits[a][b].justAttacked == false)
+					{
+						if(myUnits[a][b + 1].flying == true)
+						{
+							
+						}
+						else
+						{
+						myUnits[a][b + 1].health -= enemyUnits[a][b].damage;
+						enemyUnits[a][b].justAttacked = true;
+						}
+						
+					}
+					
+					//Tower Under unit.
+					if(map.getMapValue(b, a + 1) == 2 && enemyUnits[a][b].justAttacked == false)
+					{
+						//There is a tower in front of this unit.
+						//Check if it's the enemy tower.
+						
+						if(a > 10)//arbritrary value that works.
+						{
+							///it is the enemy tower.
+							//Attack it.
+							towerHealth = towerHealth - enemyUnits[a][b].damage;
+							enemyUnits[a][b].justAttacked = true;
+						}
+						
+					}
+					
+					//Enemy Under unit.
+					if(myUnits[a + 1][b].exists == true && enemyUnits[a][b].justAttacked == false)
+					{
+						if(myUnits[a + 1][b].flying == true)
+						{
+							
+						}
+						else
+						{
+						myUnits[a + 1][b].health -= enemyUnits[a][b].damage;
+						enemyUnits[a][b].justAttacked = true;
+						}
+						
+					}
+					
+					//Tower to left of unit.
+					if(map.getMapValue(b - 1, a) == 2 && enemyUnits[a][b].justAttacked == false)
+					{
+						//There is a tower in front of this unit.
+						//Check if it's the enemy tower.
+						
+						if(a > 10)//arbritrary value that works.
+						{
+							///it is the enemy tower.
+							//Attack it.
+							towerHealth = towerHealth - enemyUnits[a][b].damage;
+							enemyUnits[a][b].justAttacked = true;
+						}
+						
+					}
+					//Enemy to left of unit.
+					if(myUnits[a][b - 1].exists == true && enemyUnits[a][b].justAttacked == false)
+					{
+						//deal damage to them.
+						if(myUnits[a][b - 1].flying == true)
+						{
+							
+						}
+						else
+						{
+						myUnits[a][b - 1].health -= enemyUnits[a][b].damage;
+						enemyUnits[a][b].justAttacked = true;
+						}
+						
+					}
 				}
 			}
 		}
@@ -623,6 +1052,21 @@ void Game::initGraphics()
 	//unselect button.
 	surf = SDL_LoadBMP("assets\\unselect.bmp");
 	unselectButton = SDL_CreateTextureFromSurface( myRenderer, surf );
+	SDL_FreeSurface( surf );
+	
+	//Enemy Basic Unit.
+	surf = SDL_LoadBMP("assets\\enemyBasicUnitDown.bmp");
+	enemyBasicUnit = SDL_CreateTextureFromSurface( myRenderer, surf );
+	SDL_FreeSurface( surf );
+	
+	//Enemy Flying Unit.
+	surf = SDL_LoadBMP("assets\\enemyFlyingUnitDown.bmp");
+	enemyFlyingUnit = SDL_CreateTextureFromSurface( myRenderer, surf );
+	SDL_FreeSurface( surf );
+	
+	//Enemy Advanced Unit.
+	surf = SDL_LoadBMP("assets\\enemyAdvancedUnitDown.bmp");
+	enemyAdvancedUnit = SDL_CreateTextureFromSurface( myRenderer, surf );
 	SDL_FreeSurface( surf );
 }
 
@@ -893,6 +1337,24 @@ void Game::drawMap()
 						SDL_RenderCopy( myRenderer, advancedUnitUp, NULL, &rect );
 					}
 				}
+				
+				if(enemyUnits[a][b].exists == true)
+				{
+					if(enemyUnits[a][b].type == 1)
+					{
+						SDL_RenderCopy( myRenderer, enemyBasicUnit, NULL, &rect );
+					}
+					
+					if(enemyUnits[a][b].type == 2)
+					{
+						SDL_RenderCopy( myRenderer, enemyFlyingUnit, NULL, &rect );
+					}
+					
+					if(enemyUnits[a][b].type == 3)
+					{
+						SDL_RenderCopy( myRenderer, enemyAdvancedUnit, NULL, &rect);
+					}
+				}
 			}
 			
 		}
@@ -1132,6 +1594,10 @@ void Game::getMouseInput(SDL_Event* event)
 			blobTimer = (double)SDL_GetTicks();
 			blobCounter = 0;
 			workerCount = 0;
+			//Reset AI.
+			aiDelay = 10000;//Waits 10 seconds before move.
+			aiTimer = SDL_GetTicks();
+			aiMoveCounter = 0;
 			
 			towerHealth = 50;
 			enemyTowerHealth = 50;
@@ -1278,8 +1744,17 @@ void Game::getMouseInput(SDL_Event* event)
 			}
 			else
 			{					
-				selectedX = x;
-				selectedY = y;
+				if(enemyUnits[y][x].exists == true)
+				{
+					
+				}
+				else
+				{
+					selectedX = x;
+					selectedY = y;
+					//std::cout << "X: " << selectedX << " , Y: " << selectedY << std::endl;
+				}
+				
 			}
 		}
 		
@@ -1353,6 +1828,9 @@ Game::~Game()
 	TTF_CloseFont( libraSans );
 	libraSans = NULL;
 	
+	SDL_DestroyTexture( enemyAdvancedUnit );
+	SDL_DestroyTexture( enemyFlyingUnit );
+	SDL_DestroyTexture( enemyBasicUnit );
 	SDL_DestroyTexture( youWin );
 	SDL_DestroyTexture( youLose );
 	SDL_DestroyTexture( unselectButton );

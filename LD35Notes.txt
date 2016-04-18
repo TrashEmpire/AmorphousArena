@@ -71,7 +71,14 @@ Timeline:
 	Hour 45:(5PM)
 		-only 3 more hours(inclusive)
 		-Attacking System Implemented.
+		-Win condition implemented.
+	Hour 46:(6PM)
+		-All I have to do now is implement enemies, and a losing condition.
+			-Then possibly a little bit of polish.
+		-Took a small break.
 		
+		
+	8:57 PM - DONE!
 Completion List:
 	-Update Makefile for easy edits. CHECK
 	-Draw placeholder graphics to screen. CHECK
@@ -92,12 +99,12 @@ Completion List:
 		-Create System to draw Units to Screen. CHECK
 		-Allow unit drops in certain area. CHECK
 		-Create Amorphous Blob limit and generation. CHECK
-		-Break.
+		-Break. CHECK
 		-Create Unit Movement. (Pathfinding possibly. Yikes.) CHECK
 		-Add a Unselect Button. CHECK
-		-Create Sample Enemy and fighting. ( Both you and enemy Take damage. exceptions with flying )
-		-Create Enemies, and enemy Behavior. (AI, simple. no adaptation. add adaptation if time at end)
-		-Create tower attack. Add win condition. Allow for win.
+		-Create Enemies, and enemy fighting. ( Both you and enemy Take damage. exceptions with flying )
+		-Create enemy movement, and enemy Behavior. (AI, simple. no adaptation. add adaptation if time at end)
+		-Create tower attack. Add win condition. Allow for win. CHECK
 	-Polish:
 		-Polish AI.
 		-Animate Buttons.
@@ -138,7 +145,7 @@ Brainstorm:
 		-Your base can spawn various units.
 		-Limit units through mana. ( or something )
 		-You can control the units. ( Strategically )
-		-You do not have complete view of your enemy base. ( More like Starcraft, less like Clash Royale )
+		-You do not have complete view of your enemy base. ( More like Starcraft, less like Clash Royale ) THIS DID NOT HAPPEN, not necessary tho, because map control takes a while.
 		-Units start as blobs.
 			-Shapeshift into unit of choice.
 		-Battle this way. Gain bonus mana through destroying enemy units.
@@ -148,5 +155,5 @@ Brainstorm:
 			-Good practice in RTS style games.
 			-Easy map code. Easy movement code ( mouse select maybe )
 		Cons:
-			-Difficult AI coding. ( If implemented well, most time could be spent here )
+			-Difficult AI coding. ( If implemented well, most time could be spent here ) DID NOT MAKE AI THAT ADAPTS. THEY JUST DO STUFF IN A LOOP.
 			-A little complicated ( Can be simplified )
